@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "外部解析适配器架构",
+    "quality_profile": "showcase",
+    "locale": "zh-CN"
+  },
+  "components": [
+    { "id": "tpl", "type": "backend", "label": "外部引擎模板", "pos": [40, 190], "size": [140, 60], "tag": "ExternalParserBase.parse" },
+    { "id": "minad", "type": "backend", "label": "MinerU 适配器", "pos": [260, 80], "size": [130, 56], "tag": "三钩子实现" },
+    { "id": "docad", "type": "backend", "label": "Docling 适配器", "pos": [260, 300], "size": [130, 56], "tag": "三钩子+零块校验" },
+    { "id": "minsvc", "type": "external", "label": "MinerU 服务", "pos": [480, 80], "size": [140, 56], "tag": "不在本仓库源码内" },
+    { "id": "docsvc", "type": "external", "label": "Docling 服务", "pos": [480, 300], "size": [140, 56], "tag": "不在本仓库源码内" },
+    { "id": "cache", "type": "database", "label": "raw bundle 缓存", "pos": [700, 190], "size": [140, 56], "tag": "命中纯本地" }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "本仓库外部适配层", "wraps": ["tpl", "minad", "docad"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "tpl", "to": "minad", "label": "模板调钩子", "variant": "emphasis" },
+    { "id": "c2", "from": "tpl", "to": "docad", "variant": "default" },
+    { "id": "c3", "from": "minad", "to": "minsvc", "label": "HTTP", "variant": "dashed" },
+    { "id": "c4", "from": "docad", "to": "docsvc", "label": "HTTP", "variant": "dashed" },
+    { "id": "c5", "from": "tpl", "to": "cache", "label": "缓存判定", "variant": "default" }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "主路径",
+      "items": [
+        "模板固化 解析→缓存/下载→IR→sidecar",
+        "实际文档理解在外部服务，本层仅编排",
+        "命中缓存时纯本地，端点不可用仍可重解析"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "DOCX 解析与 smart_heading 四件套架构",
+    "quality_profile": "showcase",
+    "locale": "zh-CN"
+  },
+  "components": [
+    { "id": "adapter", "type": "backend", "label": "DOCX 适配器", "pos": [40, 80], "size": [130, 56], "tag": "NativeDocxParser" },
+    { "id": "zipbudget", "type": "backend", "label": "解压预算", "pos": [40, 190], "size": [130, 56], "tag": "防 zip-bomb" },
+    { "id": "extract", "type": "backend", "label": "结构切分", "pos": [250, 80], "size": [130, 56], "tag": "extract_docx_blocks" },
+    { "id": "readrec", "type": "backend", "label": "单遍读记录", "pos": [250, 190], "size": [130, 56], "tag": "ParagraphRecord" },
+    { "id": "legacy", "type": "backend", "label": "基线组装", "pos": [250, 300], "size": [130, 56], "tag": "smart 关闭/回退" },
+    { "id": "features", "type": "backend", "label": "物理特征", "pos": [470, 30], "size": [130, 56], "tag": "字号/对齐/字重" },
+    { "id": "headingflow", "type": "backend", "label": "标题流编排", "pos": [470, 190], "size": [130, 56], "tag": "run_smart_heading" },
+    { "id": "titleblock", "type": "backend", "label": "标题块判定", "pos": [470, 300], "size": [130, 56], "tag": "LLM judge" },
+    { "id": "guardrails", "type": "backend", "label": "护栏校验", "pos": [690, 190], "size": [130, 56], "tag": "I1/I2/I3" },
+    { "id": "irbuilder", "type": "backend", "label": "IR 构建", "pos": [690, 80], "size": [130, 56], "tag": "产出 IRDoc" },
+    { "id": "llm", "type": "external", "label": "LLM 服务", "pos": [470, 410], "size": [130, 56], "tag": "不在本仓库源码内" }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "docx 原生解析层", "wraps": ["adapter", "zipbudget", "extract", "readrec", "legacy", "features", "headingflow", "titleblock", "guardrails", "irbuilder"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "adapter", "to": "zipbudget", "variant": "default" },
+    { "id": "c2", "from": "adapter", "to": "extract", "variant": "emphasis" },
+    { "id": "c3", "from": "extract", "to": "readrec", "variant": "default" },
+    { "id": "c4", "from": "readrec", "to": "legacy", "variant": "default" },
+    { "id": "c5", "from": "readrec", "to": "headingflow", "variant": "emphasis" },
+    { "id": "c6", "from": "features", "to": "headingflow", "variant": "default" },
+    { "id": "c7", "from": "headingflow", "to": "titleblock", "variant": "default" },
+    { "id": "c8", "from": "titleblock", "to": "llm", "variant": "dashed" },
+    { "id": "c9", "from": "headingflow", "to": "guardrails", "variant": "default" },
+    { "id": "c10", "from": "extract", "to": "irbuilder", "variant": "emphasis" }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "主路径",
+      "items": [
+        "适配器→切分→读记录→组装→IR 构建",
+        "smart 与基线双轨，护栏违例回退基线",
+        "块大小故意留待下游语义分块器"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "工作区启动时序",
+    "quality_profile": "showcase",
+    "locale": "zh-CN",
+    "viewBox": [1100, 680]
+  },
+  "participants": [
+    { "id": "app", "type": "frontend", "label": "WorkspaceApp" },
+    { "id": "boot", "type": "backend", "label": "auth引导" },
+    { "id": "probe", "type": "backend", "label": "凭据探测" },
+    { "id": "be", "type": "external", "label": "后端" }
+  ],
+  "messages": [
+    { "id": "m1", "from": "app", "to": "boot", "y": 160, "label": "挂载启动", "variant": "emphasis" },
+    { "id": "m2", "from": "boot", "to": "be", "y": 220, "label": "auth-status", "variant": "default" },
+    { "id": "m3", "from": "be", "to": "boot", "y": 280, "label": "认证态", "variant": "return" },
+    { "id": "m4", "from": "boot", "to": "probe", "y": 340, "label": "凭据检查", "variant": "default" },
+    { "id": "m5", "from": "probe", "to": "be", "y": 400, "label": "verify", "variant": "default" },
+    { "id": "m6", "from": "be", "to": "probe", "y": 460, "label": "结果", "variant": "return" },
+    { "id": "m7", "from": "probe", "to": "app", "y": 520, "label": "进查询视图", "variant": "return" },
+    { "id": "m8", "from": "probe", "to": "app", "y": 580, "label": "跳登录页", "variant": "dashed" }
+  ]
+}

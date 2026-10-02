@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": { "title": "向量后端重载并重放数据流", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1200, 400] },
+  "stages": [
+    { "label": "缓冲待写" },
+    { "label": "围栏检测" },
+    { "label": "重载磁盘" },
+    { "label": "重放 redo" },
+    { "label": "原子落盘" }
+  ],
+  "nodes": [
+    { "id": "buf", "type": "backend", "label": "pending 缓冲", "stage": 0, "row": 0 },
+    { "id": "fence", "type": "backend", "label": "两通道检测", "stage": 1, "row": 0 },
+    { "id": "reload", "type": "database", "label": "重载快照", "stage": 2, "row": 0 },
+    { "id": "replay", "type": "backend", "label": "重放 redo log", "stage": 3, "row": 0 },
+    { "id": "disk", "type": "external", "label": "整文件重写", "stage": 4, "row": 0 }
+  ],
+  "flows": [
+    { "from": "buf", "to": "fence", "label": "提交点", "variant": "emphasis", "route": "straight" },
+    { "from": "fence", "to": "reload", "label": "发现越过", "variant": "default", "route": "straight" },
+    { "from": "reload", "to": "replay", "label": "重放缓冲", "variant": "emphasis", "route": "straight" },
+    { "from": "replay", "to": "disk", "label": "按id裁决", "variant": "default", "route": "straight" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "与图store相反", "items": [
+      "向量store重载重放不丢数据",
+      "按 __write_seq__ 裁新旧",
+      "NetworkX 则拒绝提交"
+    ] }
+  ]
+}

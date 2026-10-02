@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": { "title": "角色化 LLM 注册表与包装器架构", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1080, 520] },
+  "components": [
+    { "id": "reg", "type": "backend", "label": "ROLES 注册表", "pos": [60, 60], "size": [150, 60], "tag": "4 角色" },
+    { "id": "cfg", "type": "backend", "label": "RoleLLMConfig", "pos": [60, 180], "size": [150, 60] },
+    { "id": "wrap", "type": "backend", "label": "包装器构建", "pos": [300, 120], "size": [150, 60], "tag": "优先级队列" },
+    { "id": "funcs", "type": "backend", "label": "role_llm_funcs", "pos": [540, 120], "size": [150, 60], "tag": "只读映射" },
+    { "id": "extract", "type": "backend", "label": "提取调用方", "pos": [790, 60], "size": [130, 56] },
+    { "id": "query", "type": "backend", "label": "查询调用方", "pos": [790, 140], "size": [130, 56] },
+    { "id": "vlm", "type": "backend", "label": "VLM 调用方", "pos": [790, 220], "size": [130, 56] },
+    { "id": "cleanup", "type": "security", "label": "旧队列清理", "pos": [300, 240], "size": [150, 56] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "_RoleLLMMixin（本仓库）", "wraps": ["reg", "cfg", "wrap", "funcs", "cleanup"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "reg", "to": "wrap", "label": "遍历角色", "variant": "default", "fromSide": "right", "toSide": "left" },
+    { "id": "c2", "from": "cfg", "to": "wrap", "label": "覆盖配置", "variant": "default", "fromSide": "right", "toSide": "left" },
+    { "id": "c3", "from": "wrap", "to": "funcs", "label": "包装器", "variant": "emphasis", "fromSide": "right", "toSide": "left" },
+    { "id": "c4", "from": "funcs", "to": "extract", "label": "extract", "variant": "default", "fromSide": "right", "toSide": "left" },
+    { "id": "c5", "from": "funcs", "to": "query", "label": "query", "variant": "default", "fromSide": "right", "toSide": "left" },
+    { "id": "c6", "from": "funcs", "to": "vlm", "label": "vlm", "variant": "default", "fromSide": "right", "toSide": "left" },
+    { "id": "c7", "from": "wrap", "to": "cleanup", "label": "退役", "variant": "dashed", "fromSide": "bottom", "toSide": "top", "labelDy": 30 }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "要点", "items": ["4 角色独立并发队列", "配置缺失回退基础设置", "新增角色只改一行"] }
+  ]
+}

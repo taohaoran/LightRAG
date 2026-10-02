@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": { "title": "提取与多模式检索模块架构", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1080, 560] },
+  "components": [
+    { "id": "rag", "type": "external", "label": "LightRAG 主类", "pos": [40, 90], "size": [130, 56] },
+    { "id": "valid", "type": "security", "label": "查询校验", "pos": [230, 90], "size": [120, 56] },
+    { "id": "query", "type": "backend", "label": "KG 查询", "pos": [410, 90], "size": [130, 56], "tag": "kg_query" },
+    { "id": "extract", "type": "backend", "label": "实体提取", "pos": [410, 210], "size": [130, 56], "tag": "extract_entities" },
+    { "id": "rerank", "type": "backend", "label": "重排", "pos": [230, 210], "size": [120, 56] },
+    { "id": "graph", "type": "database", "label": "图存储", "pos": [640, 40], "size": [110, 56] },
+    { "id": "evdb", "type": "database", "label": "实体向量库", "pos": [640, 120], "size": [110, 56] },
+    { "id": "rvdb", "type": "database", "label": "关系向量库", "pos": [640, 200], "size": [110, 56] },
+    { "id": "kv", "type": "database", "label": "文本块 KV", "pos": [640, 280], "size": [110, 56] },
+    { "id": "llm", "type": "cloud", "label": "外部 LLM", "pos": [860, 90], "size": [120, 56] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "operate 编排层", "wraps": ["valid", "query", "extract", "rerank"] },
+    { "kind": "region", "label": "存储依赖", "wraps": ["graph", "evdb", "rvdb", "kv"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "rag", "to": "valid", "label": "准入", "variant": "default", "fromSide": "right", "toSide": "left" },
+    { "id": "c2", "from": "valid", "to": "query", "label": "通过", "variant": "emphasis", "fromSide": "right", "toSide": "left" },
+    { "id": "c3", "from": "rag", "to": "extract", "label": "提取", "variant": "default", "fromSide": "bottom", "toSide": "left" },
+    { "id": "c4", "from": "query", "to": "rerank", "label": "mix", "variant": "dashed", "fromSide": "bottom", "toSide": "top" },
+    { "id": "c5", "from": "extract", "to": "graph", "label": "写图", "variant": "default", "fromSide": "right", "toSide": "left" },
+    { "id": "c6", "from": "extract", "to": "evdb", "label": "写向量", "variant": "default", "fromSide": "right", "toSide": "left" },
+    { "id": "c7", "from": "query", "to": "rvdb", "label": "召回", "variant": "default", "fromSide": "right", "toSide": "left" },
+    { "id": "c8", "from": "query", "to": "kv", "label": "取块", "variant": "default", "fromSide": "right", "toSide": "left" },
+    { "id": "c9", "from": "query", "to": "llm", "label": "", "variant": "dashed", "fromSide": "right", "toSide": "left" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "主路径", "items": ["查询经校验后按 mode 召回", "提取写图与向量库", "外部 LLM/重排不在本仓库"] }
+  ]
+}

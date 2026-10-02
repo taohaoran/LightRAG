@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": { "title": "admin 图写操作矩阵与门", "quality_profile": "showcase", "locale": "zh-CN" },
+  "components": [
+    { "id": "router", "type": "external", "label": "REST 路由", "pos": [60, 220], "size": [130, 60] },
+    { "id": "gate", "type": "backend", "label": "admin 写门", "pos": [330, 220], "size": [160, 60], "tag": "串行化" },
+    { "id": "create", "type": "backend", "label": "建实体/关系", "pos": [600, 60], "size": [150, 54] },
+    { "id": "edit", "type": "backend", "label": "改实体/关系", "pos": [600, 160], "size": [150, 54] },
+    { "id": "delete", "type": "backend", "label": "删实体/关系", "pos": [600, 260], "size": [150, 54] },
+    { "id": "merge", "type": "backend", "label": "合并实体", "pos": [600, 360], "size": [150, 54] },
+    { "id": "store", "type": "database", "label": "图存储后端", "pos": [880, 210], "size": [150, 60] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "admin 写操作", "wraps": ["create", "edit", "delete", "merge"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "router", "to": "gate", "variant": "emphasis" },
+    { "id": "c2", "from": "gate", "to": "create", "variant": "default" },
+    { "id": "c3", "from": "gate", "to": "edit", "variant": "default" },
+    { "id": "c4", "from": "gate", "to": "delete", "variant": "default" },
+    { "id": "c5", "from": "gate", "to": "merge", "variant": "default" },
+    { "id": "c6", "from": "merge", "to": "store", "variant": "default" }
+  ],
+  "cards": [
+    { "dot": "orange", "title": "要点", "items": [
+      "先校验后首次写",
+      "提交失败即抛错",
+      "仅 NetworkX 过门串行"
+    ] }
+  ]
+}

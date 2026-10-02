@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "api 域架构图",
+    "quality_profile": "standard",
+    "locale": "zh-CN",
+    "viewBox": [1100, 700]
+  },
+  "components": [
+    { "id": "client", "type": "external", "label": "客户端", "pos": [40, 280], "size": [130, 60] },
+    { "id": "mw", "type": "security", "label": "中间件+认证", "pos": [240, 280], "size": [160, 60] },
+    { "id": "routes", "type": "backend", "label": "五路由模块", "pos": [460, 280], "size": [170, 60] },
+    { "id": "config", "type": "backend", "label": "配置面", "pos": [240, 100], "size": [160, 60] },
+    { "id": "rag", "type": "backend", "label": "LightRAG 核心", "pos": [700, 280], "size": [180, 80] },
+    { "id": "webui", "type": "frontend", "label": "WebUI 静态", "pos": [700, 460], "size": [180, 60] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "FastAPI 服务", "wraps": ["mw", "routes"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "client", "to": "mw", "variant": "emphasis" },
+    { "id": "c2", "from": "mw", "to": "routes", "variant": "emphasis" },
+    { "id": "c3", "from": "routes", "to": "rag", "variant": "emphasis" },
+    { "id": "c4", "from": "config", "to": "rag", "variant": "dashed" },
+    { "id": "c5", "from": "rag", "to": "webui", "variant": "dashed" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "域边界", "items": [
+      "中间件读 body 前作答",
+      "五路由工厂注入 rag",
+      "配置启动期只读",
+      "核心检索在 core 域"
+    ] }
+  ]
+}

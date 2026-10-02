@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": { "title": "PostgreSQL 家族四类存储", "quality_profile": "showcase", "locale": "zh-CN" },
+  "components": [
+    { "id": "caller", "type": "external", "label": "LightRAG", "pos": [60, 200], "size": [130, 60] },
+    { "id": "pool", "type": "backend", "label": "PostgreSQLDB 连接池", "pos": [330, 200], "size": [180, 60], "tag": "asyncpg" },
+    { "id": "kv", "type": "backend", "label": "PGKVStorage", "pos": [620, 60], "size": [160, 56] },
+    { "id": "vec", "type": "backend", "label": "PGVectorStorage", "pos": [620, 160], "size": [160, 56] },
+    { "id": "doc", "type": "backend", "label": "PGDocStatus", "pos": [620, 260], "size": [160, 56] },
+    { "id": "graph", "type": "backend", "label": "PGGraphStorage", "pos": [620, 360], "size": [160, 56], "tag": "AGE" },
+    { "id": "pgtable", "type": "backend", "label": "PGTableGraph", "pos": [620, 460], "size": [160, 56], "tag": "关系表" },
+    { "id": "pg", "type": "database", "label": "PostgreSQL 服务", "pos": [900, 240], "size": [160, 70] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "PG 家族实现", "wraps": ["kv", "vec", "doc", "graph", "pgtable"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "caller", "to": "pool", "label": "取连接", "variant": "emphasis" },
+    { "id": "c2", "from": "pool", "to": "kv", "variant": "default" },
+    { "id": "c3", "from": "pool", "to": "vec", "variant": "default" },
+    { "id": "c4", "from": "pool", "to": "doc", "variant": "default" },
+    { "id": "c5", "from": "pool", "to": "graph", "variant": "default" },
+    { "id": "c6", "from": "pool", "to": "pgtable", "variant": "dashed" },
+    { "id": "c7", "from": "kv", "to": "pg", "variant": "default" },
+    { "id": "c8", "from": "graph", "to": "pg", "variant": "default" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "要点", "items": [
+      "行级并发，不要求单写者",
+      "图双轨：AGE 与关系表",
+      "向量延迟嵌入同文件型"
+    ] }
+  ]
+}

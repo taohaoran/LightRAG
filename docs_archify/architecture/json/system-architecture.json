@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "LightRAG 系统架构图",
+    "quality_profile": "standard",
+    "locale": "zh-CN",
+    "viewBox": [1200, 860]
+  },
+  "components": [
+    { "id": "webui", "type": "frontend", "label": "WebUI 前端", "sublabel": "React19+TS", "pos": [60, 70], "size": [150, 65] },
+    { "id": "client", "type": "external", "label": "第三方客户端", "sublabel": "Ollama/REST", "pos": [60, 175], "size": [150, 55] },
+    { "id": "apiserver", "type": "backend", "label": "API Server", "sublabel": "FastAPI+Gunicorn", "pos": [290, 100], "size": [165, 75] },
+    { "id": "auth", "type": "security", "label": "认证鉴权层", "sublabel": "auth/admission", "pos": [290, 215], "size": [165, 55] },
+    { "id": "core", "type": "backend", "label": "LightRAG 核心", "sublabel": "mixin组合", "pos": [540, 60], "size": [175, 75] },
+    { "id": "operate", "type": "backend", "label": "检索与提取", "sublabel": "operate+rerank", "pos": [540, 175], "size": [175, 65] },
+    { "id": "pipeline", "type": "backend", "label": "摄入管线", "sublabel": "pipeline mixin", "pos": [540, 285], "size": [175, 65] },
+    { "id": "roles", "type": "backend", "label": "LLM 角色管理", "sublabel": "llm_roles", "pos": [540, 395], "size": [175, 55] },
+    { "id": "parser", "type": "backend", "label": "解析引擎", "sublabel": "4引擎路由", "pos": [810, 285], "size": [145, 65] },
+    { "id": "chunker", "type": "backend", "label": "分块策略", "sublabel": "注册表4策略", "pos": [810, 395], "size": [145, 55] },
+    { "id": "kv", "type": "database", "label": "KV 存储", "sublabel": "缓存/chunk", "pos": [260, 530], "size": [140, 65] },
+    { "id": "vector", "type": "database", "label": "向量存储", "sublabel": "实体/关系", "pos": [440, 530], "size": [140, 65] },
+    { "id": "graph", "type": "database", "label": "图存储", "sublabel": "实体关系图", "pos": [620, 530], "size": [140, 65] },
+    { "id": "docstatus", "type": "database", "label": "文档状态", "sublabel": "恢复锚点", "pos": [800, 530], "size": [140, 65] },
+    { "id": "llmext", "type": "external", "label": "LLM 提供商", "sublabel": "OpenAI/Ollama", "pos": [810, 60], "size": [155, 65] },
+    { "id": "embedext", "type": "external", "label": "嵌入模型", "sublabel": "向量化服务", "pos": [810, 175], "size": [155, 55] },
+    { "id": "dbext", "type": "external", "label": "外部存储后端", "sublabel": "PG/Neo4j/Redis", "pos": [470, 680], "size": [190, 55] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "接入层", "wraps": ["webui", "client", "apiserver", "auth"] },
+    { "kind": "region", "label": "核心编排层", "wraps": ["core", "operate", "pipeline", "roles"] },
+    { "kind": "region", "label": "处理层", "wraps": ["parser", "chunker"] },
+    { "kind": "region", "label": "4类存储层", "wraps": ["kv", "vector", "graph", "docstatus"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "webui", "to": "apiserver", "label": "REST/流式", "variant": "emphasis" },
+    { "id": "c2", "from": "client", "to": "apiserver", "label": "API调用", "variant": "default" },
+    { "id": "c3", "from": "apiserver", "to": "auth", "label": "鉴权预检", "variant": "security", "labelDy": 20 },
+    { "id": "c4", "from": "apiserver", "to": "core", "label": "ainsert/aquery", "variant": "emphasis" },
+    { "id": "c5", "from": "core", "to": "operate", "label": "提取检索", "variant": "default", "labelDy": 36 },
+    { "id": "c6", "from": "core", "to": "pipeline", "label": "文档摄入", "variant": "default", "fromSide": "right", "toSide": "right", "labelDy": -12 },
+    { "id": "c7", "from": "core", "to": "roles", "label": "角色LLM", "variant": "default", "fromSide": "right", "toSide": "right" },
+    { "id": "c8", "from": "pipeline", "to": "parser", "label": "解析分发", "variant": "default" },
+    { "id": "c9", "from": "parser", "to": "chunker", "label": "分块", "variant": "default", "labelDy": 18 },
+    { "id": "c10", "from": "operate", "to": "llmext", "label": "LLM调用", "variant": "dashed" },
+    { "id": "c11", "from": "operate", "to": "embedext", "label": "嵌入计算", "variant": "dashed" },
+    { "id": "c15", "from": "pipeline", "to": "docstatus", "label": "状态追踪", "variant": "default", "fromSide": "right", "toSide": "top" },
+    { "id": "c16", "from": "kv", "to": "dbext", "label": "后端适配", "variant": "dashed", "fromSide": "bottom", "toSide": "top" },
+    { "id": "c17", "from": "vector", "to": "dbext", "label": "后端适配", "variant": "dashed", "fromSide": "bottom", "toSide": "top" },
+    { "id": "c18", "from": "graph", "to": "dbext", "label": "后端适配", "variant": "dashed", "fromSide": "bottom", "toSide": "top" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "核心范式", "items": ["mixin组合+4类存储可插拔", "图谱增强RAG，5种检索模式"] },
+    { "dot": "amber", "title": "一致性模型", "items": ["跨存储无事务", "可自愈残留+fail loud"] },
+    { "dot": "cyan", "title": "存储读写", "items": ["检索引擎读写KV/向量/图存储", "摄入管线追踪文档状态"] }
+  ]
+}

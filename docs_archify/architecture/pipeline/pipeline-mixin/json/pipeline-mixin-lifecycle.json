@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "diagram_type": "lifecycle",
+  "meta": { "title": "单文档处理生命周期", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [980, 620] },
+  "lanes": [
+    { "id": "main", "label": "处理主链" },
+    { "id": "fail", "label": "失败与手动重试" }
+  ],
+  "states": [
+    { "id": "pending", "type": "start", "label": "待处理", "sublabel": "PENDING", "lane": "main", "col": 0, "tag": "入队" },
+    { "id": "processing", "type": "active", "label": "处理中", "sublabel": "PROCESSING", "lane": "main", "col": 1, "tag": "解析/提取" },
+    { "id": "processed", "type": "success", "label": "已处理", "sublabel": "PROCESSED", "lane": "main", "col": 2, "tag": "终态" },
+    { "id": "failed", "type": "failure", "label": "失败", "sublabel": "FAILED", "lane": "fail", "col": 0, "tag": "不自动恢复" }
+  ],
+  "transitions": [
+    { "from": "processing", "to": "failed", "variant": "security", "route": "straight" },
+    { "from": "failed", "to": "processing", "variant": "emphasis", "route": "straight" }
+  ],
+  "cards": [
+    { "dot": "amber", "title": "失败语义", "items": ["FAILED 不自动恢复", "仅手动重试给一次机会", "取消在阶段边界中断"] }
+  ]
+}

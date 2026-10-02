@@ -1,0 +1,22 @@
+{
+  "schema_version": 1, "diagram_type": "architecture",
+  "meta": { "title": "V/P 语义分块架构", "quality_profile": "showcase", "locale": "zh-CN" },
+  "components": [
+    { "id": "ct", "type": "frontend", "label": "输入文本", "pos": [40, 190], "size": [120, 56] },
+    { "id": "v", "type": "backend", "label": "V 向量分块", "pos": [250, 90], "size": [130, 56] },
+    { "id": "p", "type": "backend", "label": "P 段落分块", "pos": [250, 290], "size": [130, 56] },
+    { "id": "em", "type": "external", "label": "EmbeddingFunc", "pos": [470, 90], "size": [140, 56], "tag": "不在本仓库" },
+    { "id": "sc", "type": "database", "label": "blocks.jsonl", "pos": [470, 290], "size": [130, 56] },
+    { "id": "ck", "type": "database", "label": "chunk 列表", "pos": [690, 190], "size": [130, 56] }
+  ],
+  "boundaries": [ { "kind": "region", "label": "semantic-chunkers", "wraps": ["v", "p"] } ],
+  "connections": [
+    { "id": "c1", "from": "ct", "to": "v", "variant": "emphasis" },
+    { "id": "c2", "from": "ct", "to": "p", "variant": "default" },
+    { "id": "c3", "from": "v", "to": "em", "variant": "dashed" },
+    { "id": "c4", "from": "p", "to": "sc", "variant": "default" },
+    { "id": "c5", "from": "v", "to": "ck", "variant": "emphasis" },
+    { "id": "c6", "from": "p", "to": "ck", "variant": "default" }
+  ],
+  "cards": [ { "dot": "emerald", "title": "主路径", "items": ["文本→向量/段落→chunk", "V 靠嵌入相似度断点", "P 消费 sidecar，缺失回退 R"] } ]
+}

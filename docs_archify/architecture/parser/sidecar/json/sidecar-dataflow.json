@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "IRDoc 落盘数据流",
+    "quality_profile": "showcase",
+    "locale": "zh-CN",
+    "viewBox": [
+      1200,
+      620
+    ]
+  },
+  "stages": [
+    {
+      "label": "输入"
+    },
+    {
+      "label": "id 分配"
+    },
+    {
+      "label": "模板渲染"
+    },
+    {
+      "label": "资产物化"
+    },
+    {
+      "label": "sidecar 输出"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "ir",
+      "type": "frontend",
+      "label": "IRDoc",
+      "stage": 0,
+      "row": 0
+    },
+    {
+      "id": "alloc",
+      "type": "backend",
+      "label": "tb/im/eq 编号",
+      "stage": 1,
+      "row": 0
+    },
+    {
+      "id": "render",
+      "type": "backend",
+      "label": "占位符展开",
+      "stage": 2,
+      "row": 0
+    },
+    {
+      "id": "mat",
+      "type": "backend",
+      "label": "资产落盘",
+      "stage": 3,
+      "row": 0
+    },
+    {
+      "id": "bj",
+      "type": "database",
+      "label": "blocks.jsonl",
+      "stage": 4,
+      "row": 0
+    },
+    {
+      "id": "mm",
+      "type": "database",
+      "label": "多模态 json",
+      "stage": 4,
+      "row": 1
+    },
+    {
+      "id": "ad",
+      "type": "database",
+      "label": "assets 目录",
+      "stage": 4,
+      "row": 2
+    }
+  ],
+  "flows": [
+    {
+      "from": "ir",
+      "to": "alloc",
+      "label": "IRDoc",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "from": "alloc",
+      "to": "render",
+      "label": "编号",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "from": "render",
+      "to": "mat",
+      "label": "展开",
+      "variant": "default",
+      "route": "straight"
+    },
+    {
+      "from": "mat",
+      "to": "bj",
+      "label": "块文本",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "from": "mat",
+      "to": "ad",
+      "variant": "default",
+      "route": "bottom-channel",
+      "label": "资产"
+    },
+    {
+      "from": "mat",
+      "to": "mm",
+      "label": "多模态",
+      "variant": "default",
+      "route": "bottom-channel"
+    }
+  ]
+}

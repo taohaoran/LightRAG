@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "存储契约分层与后端矩阵",
+    "quality_profile": "showcase",
+    "locale": "zh-CN"
+  },
+  "components": [
+    { "id": "caller", "type": "external", "label": "LightRAG 主类", "pos": [60, 60], "size": [150, 60] },
+    { "id": "factory", "type": "backend", "label": "get_storage_class 工厂", "pos": [330, 60], "size": [180, 60], "tag": "字符串路由" },
+    { "id": "registry", "type": "backend", "label": "STORAGES 注册表", "pos": [330, 180], "size": [180, 60], "tag": "名称→模块" },
+    { "id": "verify", "type": "security", "label": "兼容性校验", "pos": [330, 300], "size": [180, 60] },
+    { "id": "kv", "type": "backend", "label": "BaseKVStorage", "pos": [620, 40], "size": [160, 56], "tag": "缓存/块/文档" },
+    { "id": "vec", "type": "backend", "label": "BaseVectorStorage", "pos": [620, 130], "size": [160, 56], "tag": "实体/关系/块嵌入" },
+    { "id": "graph", "type": "backend", "label": "BaseGraphStorage", "pos": [620, 220], "size": [160, 56], "tag": "实体关系图" },
+    { "id": "docstatus", "type": "backend", "label": "DocStatusStorage", "pos": [620, 310], "size": [160, 56], "tag": "文档调度状态" },
+    { "id": "filebe", "type": "database", "label": "文件型五后端", "pos": [880, 100], "size": [170, 70], "tag": "进程内副本" },
+    { "id": "pgbe", "type": "database", "label": "PG 家族后端", "pos": [880, 220], "size": [170, 70], "tag": "服务端存储" },
+    { "id": "ext", "type": "external", "label": "外部数据库服务", "pos": [880, 330], "size": [170, 60], "tag": "不在本仓库" }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "注册表与工厂 kg/", "wraps": ["factory", "registry", "verify"] },
+    { "kind": "region", "label": "抽象基类契约 base.py", "wraps": ["kv", "vec", "graph", "docstatus"] },
+    { "kind": "region", "label": "后端实现矩阵", "wraps": ["filebe", "pgbe", "ext"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "caller", "to": "factory", "label": "存储名字符串", "variant": "emphasis" },
+    { "id": "c2", "from": "factory", "to": "registry", "variant": "default" },
+    { "id": "c3", "from": "caller", "to": "verify", "label": "类型校验", "variant": "default" },
+    { "id": "c4", "from": "factory", "to": "kv", "label": "实例化", "variant": "emphasis" },
+    { "id": "c5", "from": "factory", "to": "vec", "label": "实例化", "variant": "default" },
+    { "id": "c6", "from": "factory", "to": "graph", "label": "实例化", "variant": "default" },
+    { "id": "c7", "from": "factory", "to": "docstatus", "label": "实例化", "variant": "default" },
+    { "id": "c8", "from": "kv", "to": "filebe", "label": "实现", "variant": "default" },
+    { "id": "c9", "from": "graph", "to": "pgbe", "label": "实现", "variant": "default" },
+    { "id": "c10", "from": "pgbe", "to": "ext", "variant": "dashed" }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "核心要点",
+      "items": [
+        "四类存储契约在消费方基类定义",
+        "配置字符串经工厂惰性路由到后端类",
+        "requires_single_writer 仅 NetworkX 置位"
+      ]
+    }
+  ]
+}

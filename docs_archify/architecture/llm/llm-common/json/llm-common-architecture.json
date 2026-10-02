@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": { "title": "LLM 公共工具架构", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1080, 420] },
+  "components": [
+    { "id": "providers", "type": "external", "label": "各 provider 函数", "pos": [40, 170], "size": [140, 56] },
+    { "id": "err", "type": "security", "label": "错误判定", "pos": [260, 80], "size": [140, 56] },
+    { "id": "vision", "type": "backend", "label": "图像归一化", "pos": [260, 180], "size": [140, 56] },
+    { "id": "dep", "type": "backend", "label": "已弃用 provider", "pos": [260, 280], "size": [140, 56] },
+    { "id": "vlm", "type": "cloud", "label": "VLM 调用", "pos": [520, 180], "size": [130, 56] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "llm 公共工具（本仓库）", "wraps": ["err", "vision", "dep"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "providers", "to": "err", "label": "失败分类", "variant": "default", "fromSide": "right", "toSide": "left" },
+    { "id": "c2", "from": "providers", "to": "vision", "label": "图像输入", "variant": "emphasis", "fromSide": "right", "toSide": "left" },
+    { "id": "c3", "from": "vision", "to": "vlm", "label": "归一图像", "variant": "dashed", "fromSide": "right", "toSide": "left" },
+    { "id": "c4", "from": "providers", "to": "dep", "label": "兼容", "variant": "dashed", "fromSide": "right", "toSide": "left" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "要点", "items": ["跨 provider 复用纯函数", "永久限流不重试", "未知图像格式优雅降级"] }
+  ]
+}

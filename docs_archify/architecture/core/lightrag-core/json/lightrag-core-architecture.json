@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": { "title": "LightRAG 主类组合与存储装配架构", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1100, 680] },
+  "components": [
+    { "id": "sdk", "type": "external", "label": "SDK / 服务端", "pos": [60, 90], "size": [140, 56] },
+    { "id": "core", "type": "backend", "label": "LightRAG 主类", "pos": [280, 80], "size": [150, 66], "tag": "@final 编排" },
+    { "id": "mixin_role", "type": "backend", "label": "角色 LLM mixin", "pos": [520, 30], "size": [140, 50] },
+    { "id": "mixin_mig", "type": "backend", "label": "存储迁移 mixin", "pos": [520, 100], "size": [140, 50] },
+    { "id": "mixin_pipe", "type": "backend", "label": "摄入管线 mixin", "pos": [520, 170], "size": [140, 50] },
+    { "id": "admin_gate", "type": "security", "label": "admin 写门", "pos": [520, 260], "size": [140, 56], "tag": "仅 NetworkX" },
+    { "id": "factory", "type": "backend", "label": "存储工厂路由", "pos": [320, 340], "size": [150, 56] },
+    { "id": "kv", "type": "database", "label": "KV 存储", "pos": [80, 500], "size": [120, 56] },
+    { "id": "vec", "type": "database", "label": "向量存储", "pos": [240, 500], "size": [120, 56] },
+    { "id": "graph", "type": "database", "label": "图存储", "pos": [400, 500], "size": [120, 56] },
+    { "id": "docstat", "type": "database", "label": "文档状态存储", "pos": [560, 500], "size": [130, 56] },
+    { "id": "llm", "type": "cloud", "label": "外部 LLM 服务", "pos": [820, 50], "size": [140, 56] },
+    { "id": "emb", "type": "cloud", "label": "外部 Embedding", "pos": [820, 150], "size": [140, 56] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "LightRAG 主编排（本仓库）", "wraps": ["core", "mixin_role", "mixin_mig", "mixin_pipe", "admin_gate"] },
+    { "kind": "region", "label": "存储层（factory 路由）", "wraps": ["factory", "kv", "vec", "graph", "docstat"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "sdk", "to": "core", "label": "写入/查询", "variant": "emphasis", "fromSide": "right", "toSide": "left", "labelDy": 40 },
+    { "id": "c2", "from": "core", "to": "mixin_role", "label": "继承", "variant": "default", "fromSide": "right", "toSide": "left" },
+    { "id": "c3", "from": "core", "to": "mixin_mig", "label": "", "variant": "default", "fromSide": "right", "toSide": "left" },
+    { "id": "c4", "from": "core", "to": "mixin_pipe", "label": "", "variant": "default", "fromSide": "right", "toSide": "left" },
+    { "id": "c5", "from": "core", "to": "admin_gate", "label": "写包夹", "variant": "security", "fromSide": "right", "toSide": "left" },
+    { "id": "c6", "from": "core", "to": "factory", "label": "字符串路由", "variant": "emphasis", "fromSide": "bottom", "toSide": "top" },
+    { "id": "c7", "from": "factory", "to": "kv", "label": "", "variant": "default", "fromSide": "bottom", "toSide": "top" },
+    { "id": "c8", "from": "factory", "to": "vec", "label": "", "variant": "default", "fromSide": "bottom", "toSide": "top" },
+    { "id": "c9", "from": "factory", "to": "graph", "label": "单写者", "variant": "default", "fromSide": "bottom", "toSide": "top" },
+    { "id": "c10", "from": "factory", "to": "docstat", "label": "", "variant": "default", "fromSide": "bottom", "toSide": "top" },
+    { "id": "c11", "from": "mixin_role", "to": "llm", "label": "角色调用", "variant": "dashed", "fromSide": "right", "toSide": "left" },
+    { "id": "c12", "from": "mixin_pipe", "to": "emb", "label": "向量化", "variant": "dashed", "fromSide": "right", "toSide": "left" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "主路径", "items": ["SDK 调主类 → 工厂路由四类存储", "mixin 固定顺序分层", "外部 LLM/Embedding 不在本仓库"] }
+  ]
+}

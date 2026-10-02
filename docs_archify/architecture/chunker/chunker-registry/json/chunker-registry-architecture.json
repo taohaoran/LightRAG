@@ -1,0 +1,21 @@
+{
+  "schema_version": 1, "diagram_type": "architecture",
+  "meta": { "title": "分块注册表架构", "quality_profile": "showcase", "locale": "zh-CN" },
+  "components": [
+    { "id": "pipe", "type": "frontend", "label": "pipeline", "pos": [40, 190], "size": [120, 56] },
+    { "id": "reg", "type": "backend", "label": "注册表/解析", "pos": [250, 190], "size": [130, 56] },
+    { "id": "plug", "type": "backend", "label": "插件发现", "pos": [250, 80], "size": [130, 56], "tag": "lightrag.chunkers" },
+    { "id": "bind", "type": "backend", "label": "ChunkerBinding", "pos": [470, 190], "size": [140, 56] },
+    { "id": "impl", "type": "backend", "label": "F/R/V/P 实现", "pos": [690, 190], "size": [130, 56] },
+    { "id": "leg", "type": "external", "label": "legacy 回调", "pos": [470, 300], "size": [130, 56] }
+  ],
+  "boundaries": [ { "kind": "region", "label": "chunker-registry", "wraps": ["reg", "plug", "bind"] } ],
+  "connections": [
+    { "id": "c1", "from": "pipe", "to": "reg", "variant": "emphasis" },
+    { "id": "c2", "from": "plug", "to": "reg", "variant": "default" },
+    { "id": "c3", "from": "reg", "to": "bind", "variant": "emphasis" },
+    { "id": "c4", "from": "bind", "to": "impl", "variant": "default" },
+    { "id": "c5", "from": "reg", "to": "leg", "variant": "dashed" }
+  ],
+  "cards": [ { "dot": "emerald", "title": "主路径", "items": ["pipeline→注册表→Binding→实现", "实现惰性 import", "C 选择器桥接 legacy 回调"] } ]
+}

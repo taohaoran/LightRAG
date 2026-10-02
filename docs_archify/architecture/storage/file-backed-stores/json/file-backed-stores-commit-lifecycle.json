@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "diagram_type": "lifecycle",
+  "meta": { "title": "NetworkX 图提交主路径生命周期", "quality_profile": "showcase", "locale": "zh-CN" },
+  "lanes": [
+    { "id": "main", "label": "提交主路径" },
+    { "id": "terminal", "label": "终态" }
+  ],
+  "states": [
+    { "id": "pending", "type": "start", "label": "待提交", "lane": "main", "col": 0 },
+    { "id": "fence", "type": "decision", "label": "围栏检测", "lane": "main", "col": 1 },
+    { "id": "writing", "type": "active", "label": "原子写", "lane": "main", "col": 2 },
+    { "id": "published", "type": "success", "label": "已发布", "lane": "terminal", "col": 2 }
+  ],
+  "transitions": [
+    { "from": "pending", "to": "fence" },
+    { "from": "fence", "to": "writing" },
+    { "from": "writing", "to": "published" }
+  ]
+}

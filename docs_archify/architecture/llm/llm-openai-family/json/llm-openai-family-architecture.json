@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": { "title": "OpenAI 家族绑定架构", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1080, 440] },
+  "components": [
+    { "id": "roles", "type": "external", "label": "角色 LLM 注册表", "pos": [40, 180], "size": [140, 56] },
+    { "id": "core", "type": "backend", "label": "openai_complete_if_cache", "pos": [260, 80], "size": [180, 56] },
+    { "id": "client", "type": "backend", "label": "异步客户端工厂", "pos": [260, 180], "size": [180, 56] },
+    { "id": "opt", "type": "security", "label": "绑定选项 env", "pos": [260, 280], "size": [180, 56] },
+    { "id": "cache", "type": "database", "label": "LLM 缓存 KV", "pos": [540, 80], "size": [130, 56] },
+    { "id": "svc", "type": "cloud", "label": "OpenAI/Azure/NVIDIA", "pos": [540, 200], "size": [160, 56] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "openai.py 家族（本仓库）", "wraps": ["core", "client", "opt"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "roles", "to": "core", "label": "注册函数", "variant": "emphasis", "fromSide": "right", "toSide": "left" },
+    { "id": "c2", "from": "core", "to": "cache", "label": "查/写缓存", "variant": "default", "fromSide": "right", "toSide": "left" },
+    { "id": "c3", "from": "core", "to": "client", "label": "构造", "variant": "default", "fromSide": "bottom", "toSide": "top", "labelDy": 24 },
+    { "id": "c4", "from": "client", "to": "svc", "label": "HTTP", "variant": "dashed", "fromSide": "right", "toSide": "left" },
+    { "id": "c5", "from": "opt", "to": "client", "label": "配置", "variant": "dashed", "fromSide": "top", "toSide": "bottom" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "要点", "items": ["带缓存补全为核心", "Azure/NVIDIA 薄封装复用", "远端服务不在本仓库"] }
+  ]
+}

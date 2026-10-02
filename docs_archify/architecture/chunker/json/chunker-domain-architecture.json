@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": { "title": "chunker 域架构", "quality_profile": "showcase", "locale": "zh-CN" },
+  "components": [
+    { "id": "pipe", "type": "frontend", "label": "pipeline", "pos": [40, 190], "size": [120, 56] },
+    { "id": "reg", "type": "backend", "label": "注册表/工厂", "pos": [250, 190], "size": [130, 56] },
+    { "id": "f", "type": "backend", "label": "F 固定词窗", "pos": [470, 60], "size": [120, 50] },
+    { "id": "r", "type": "backend", "label": "R 递归字符", "pos": [470, 150], "size": [120, 50] },
+    { "id": "v", "type": "backend", "label": "V 语义向量", "pos": [470, 240], "size": [120, 50] },
+    { "id": "p", "type": "backend", "label": "P 段落语义", "pos": [470, 330], "size": [120, 50] },
+    { "id": "ck", "type": "database", "label": "chunk 列表", "pos": [690, 190], "size": [130, 56] }
+  ],
+  "boundaries": [ { "kind": "region", "label": "chunker 域", "wraps": ["reg", "f", "r", "v", "p"] } ],
+  "connections": [
+    { "id": "c1", "from": "pipe", "to": "reg", "variant": "emphasis" },
+    { "id": "c2", "from": "reg", "to": "r", "variant": "emphasis" },
+    { "id": "c3", "from": "reg", "to": "f", "variant": "default" },
+    { "id": "c4", "from": "reg", "to": "v", "variant": "default" },
+    { "id": "c5", "from": "reg", "to": "p", "variant": "default" },
+    { "id": "c6", "from": "r", "to": "ck", "variant": "emphasis" },
+    { "id": "c7", "from": "f", "to": "ck", "variant": "default" }
+  ],
+  "cards": [ { "dot": "emerald", "title": "主路径", "items": ["pipeline→注册表→策略→chunk", "F/R/V/P 四策略", "chunk 带 span 溯源"] } ]
+}

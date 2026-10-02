@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "webui 域架构图",
+    "quality_profile": "standard",
+    "locale": "zh-CN",
+    "viewBox": [
+      1100,
+      560
+    ]
+  },
+  "components": [
+    {
+      "id": "ui",
+      "type": "frontend",
+      "label": "UI 组件层",
+      "pos": [
+        40,
+        240
+      ],
+      "size": [
+        150,
+        60
+      ]
+    },
+    {
+      "id": "state",
+      "type": "database",
+      "label": "stores 状态",
+      "pos": [
+        280,
+        240
+      ],
+      "size": [
+        150,
+        60
+      ]
+    },
+    {
+      "id": "api",
+      "type": "backend",
+      "label": "API 客户端",
+      "pos": [
+        520,
+        240
+      ],
+      "size": [
+        150,
+        60
+      ]
+    },
+    {
+      "id": "be",
+      "type": "external",
+      "label": "后端 REST",
+      "pos": [
+        780,
+        240
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "lib",
+      "type": "backend",
+      "label": "lib 工具",
+      "pos": [
+        280,
+        80
+      ],
+      "size": [
+        150,
+        60
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "lightrag_webui/src",
+      "wraps": [
+        "ui",
+        "state",
+        "api",
+        "lib"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "ui",
+      "to": "state",
+      "variant": "emphasis"
+    },
+    {
+      "id": "c2",
+      "from": "state",
+      "to": "api",
+      "variant": "default"
+    },
+    {
+      "id": "c4",
+      "from": "api",
+      "to": "be",
+      "variant": "emphasis"
+    },
+    {
+      "id": "c5",
+      "from": "ui",
+      "to": "lib",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "前端分层",
+      "items": [
+        "UI 订阅 store",
+        "store 调 API 客户端",
+        "axios 单例 + 拦截器",
+        "lib 纯函数工具"
+      ]
+    }
+  ]
+}

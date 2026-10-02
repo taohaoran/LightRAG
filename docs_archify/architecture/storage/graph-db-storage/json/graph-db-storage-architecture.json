@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": { "title": "图数据库双后端", "quality_profile": "showcase", "locale": "zh-CN" },
+  "components": [
+    { "id": "caller", "type": "external", "label": "LightRAG", "pos": [60, 200], "size": [130, 60] },
+    { "id": "neo4j", "type": "backend", "label": "Neo4JStorage", "pos": [370, 110], "size": [170, 60] },
+    { "id": "memgraph", "type": "backend", "label": "MemgraphStorage", "pos": [370, 300], "size": [170, 60], "tag": "线协议兼容" },
+    { "id": "neo4jsvc", "type": "external", "label": "Neo4j 服务", "pos": [700, 120], "size": [150, 60] },
+    { "id": "mgsvc", "type": "external", "label": "Memgraph 服务", "pos": [700, 310], "size": [150, 60] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "专用图数据库实现", "wraps": ["neo4j", "memgraph"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "caller", "to": "neo4j", "variant": "emphasis" },
+    { "id": "c2", "from": "caller", "to": "memgraph", "variant": "default" },
+    { "id": "c3", "from": "neo4j", "to": "neo4jsvc", "variant": "default" },
+    { "id": "c4", "from": "memgraph", "to": "mgsvc", "variant": "default" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "要点", "items": [
+      "只实现 BaseGraphStorage",
+      "Cypher MERGE 即时写",
+      "Memgraph 兼容 Bolt 协议"
+    ] }
+  ]
+}

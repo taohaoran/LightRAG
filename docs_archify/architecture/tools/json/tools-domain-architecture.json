@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": { "title": "tools 域工具分组架构", "quality_profile": "showcase", "locale": "zh-CN" },
+  "components": [
+    { "id": "cli", "type": "frontend", "label": "运维 CLI", "pos": [40, 190], "size": [120, 56] },
+    { "id": "chk", "type": "backend", "label": "健康检查", "pos": [250, 70], "size": [130, 56] },
+    { "id": "rep", "type": "backend", "label": "修复/重建", "pos": [250, 190], "size": [130, 56] },
+    { "id": "eval", "type": "backend", "label": "质量评估", "pos": [250, 310], "size": [130, 56] },
+    { "id": "st", "type": "database", "label": "四类存储", "pos": [480, 190], "size": [130, 56] },
+    { "id": "ragas", "type": "external", "label": "RAGAS 等", "pos": [480, 310], "size": [130, 56], "tag": "不在本仓库" }
+  ],
+  "boundaries": [ { "kind": "region", "label": "tools 域", "wraps": ["chk", "rep", "eval"] } ],
+  "connections": [
+    { "id": "c1", "from": "cli", "to": "chk", "variant": "default" },
+    { "id": "c2", "from": "cli", "to": "rep", "variant": "emphasis" },
+    { "id": "c3", "from": "cli", "to": "eval", "variant": "default" },
+    { "id": "c4", "from": "rep", "to": "st", "variant": "emphasis" },
+    { "id": "c5", "from": "chk", "to": "st", "variant": "default" },
+    { "id": "c6", "from": "eval", "to": "ragas", "variant": "dashed" }
+  ],
+  "cards": [ { "dot": "emerald", "title": "主路径", "items": ["CLI→修复工具→四类存储", "离线触发，不在热路径", "评估依赖外部 RAGAS"] } ]
+}

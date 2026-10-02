@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": { "title": "提交发布与读者围栏检测时序", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1080, 780] },
+  "participants": [
+    { "id": "w", "type": "backend", "label": "写者进程" },
+    { "id": "flag", "type": "backend", "label": "更新标志" },
+    { "id": "r", "type": "frontend", "label": "读者进程" },
+    { "id": "fp", "type": "database", "label": "文件指纹" }
+  ],
+  "messages": [
+    { "id": "m1", "from": "w", "to": "flag", "y": 170, "label": "提交后 set_all_update_flags", "variant": "emphasis" },
+    { "id": "m2", "from": "flag", "to": "r", "y": 230, "label": "Manager RPC 置 True", "variant": "dashed" },
+    { "id": "m3", "from": "r", "to": "flag", "y": 300, "label": "进锁查 storage_updated" },
+    { "id": "m4", "from": "flag", "to": "r", "y": 360, "label": "True → 需重载", "variant": "return" },
+    { "id": "m5", "from": "r", "to": "fp", "y": 430, "label": "比对 (st_mtime_ns, size)" },
+    { "id": "m6", "from": "fp", "to": "r", "y": 490, "label": "状态通道确认", "variant": "return" },
+    { "id": "m7", "from": "r", "to": "fp", "y": 560, "label": "全量重载+记录指纹", "variant": "emphasis" },
+    { "id": "m8", "from": "r", "to": "flag", "y": 620, "label": "clear_all_update_flags", "variant": "dashed" }
+  ]
+}

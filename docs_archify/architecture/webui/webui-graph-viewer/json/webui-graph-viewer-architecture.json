@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "图谱查看架构图",
+    "quality_profile": "standard",
+    "locale": "zh-CN",
+    "viewBox": [1000, 600]
+  },
+  "components": [
+    { "id": "gv", "type": "frontend", "label": "GraphViewer", "pos": [60, 240], "size": [150, 60] },
+    { "id": "hook", "type": "backend", "label": "useLightragGraph", "pos": [320, 120], "size": [170, 70] },
+    { "id": "sigma", "type": "cloud", "label": "sigma/graphology", "pos": [320, 300], "size": [170, 60] },
+    { "id": "ctrl", "type": "frontend", "label": "17 控制组件", "pos": [320, 440], "size": [170, 60] },
+    { "id": "api", "type": "backend", "label": "图谱 API", "pos": [620, 120], "size": [150, 60] },
+    { "id": "be", "type": "external", "label": "后端", "pos": [840, 120], "size": [110, 60] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "src", "wraps": ["gv", "hook", "ctrl"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "gv", "to": "hook", "variant": "emphasis" },
+    { "id": "c2", "from": "hook", "to": "api", "variant": "emphasis" },
+    { "id": "c3", "from": "api", "to": "be", "variant": "default" },
+    { "id": "c4", "from": "hook", "to": "sigma", "variant": "default" },
+    { "id": "c5", "from": "gv", "to": "ctrl", "variant": "default" },
+    { "id": "c6", "from": "ctrl", "to": "sigma", "variant": "dashed" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "图谱要点", "items": [
+      "sigma/graphology 渲染",
+      "拉图指数退避重试",
+      "分帧让步主线程",
+      "17 控制组件"
+    ] }
+  ]
+}

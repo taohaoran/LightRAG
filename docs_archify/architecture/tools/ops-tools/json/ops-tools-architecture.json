@@ -1,0 +1,23 @@
+{
+  "schema_version": 1, "diagram_type": "architecture",
+  "meta": { "title": "运维工具架构", "quality_profile": "showcase", "locale": "zh-CN" },
+  "components": [
+    { "id": "cli", "type": "frontend", "label": "运维 CLI", "pos": [40, 190], "size": [120, 56] },
+    { "id": "itg", "type": "backend", "label": "KG 完整性", "pos": [250, 70], "size": [130, 56] },
+    { "id": "rb", "type": "backend", "label": "vdb 重建", "pos": [250, 190], "size": [130, 56] },
+    { "id": "mg", "type": "backend", "label": "迁移/清理", "pos": [250, 310], "size": [130, 56] },
+    { "id": "kv", "type": "database", "label": "KV/缓存", "pos": [480, 70], "size": [130, 56] },
+    { "id": "vd", "type": "database", "label": "向量库", "pos": [480, 190], "size": [130, 56] },
+    { "id": "gp", "type": "database", "label": "图存储", "pos": [480, 310], "size": [130, 56] }
+  ],
+  "boundaries": [ { "kind": "region", "label": "ops-tools", "wraps": ["itg", "rb", "mg"] } ],
+  "connections": [
+    { "id": "c1", "from": "cli", "to": "itg", "variant": "default" },
+    { "id": "c2", "from": "cli", "to": "rb", "variant": "emphasis" },
+    { "id": "c3", "from": "cli", "to": "mg", "variant": "default" },
+    { "id": "c4", "from": "itg", "to": "gp", "variant": "default" },
+    { "id": "c5", "from": "rb", "to": "vd", "variant": "emphasis" },
+    { "id": "c6", "from": "mg", "to": "kv", "variant": "default" }
+  ],
+  "cards": [ { "dot": "emerald", "title": "主路径", "items": ["CLI→工具→四类存储", "先审计/dry-run 后应用", "离线修复，不在热路径"] } ]
+}

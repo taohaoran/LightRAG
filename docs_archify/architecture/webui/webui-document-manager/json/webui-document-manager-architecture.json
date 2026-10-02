@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "文档管理架构图",
+    "quality_profile": "standard",
+    "locale": "zh-CN",
+    "viewBox": [1000, 600]
+  },
+  "components": [
+    { "id": "dm", "type": "frontend", "label": "DocumentManager", "pos": [60, 240], "size": [160, 70] },
+    { "id": "dlg", "type": "frontend", "label": "上传/删除对话框", "pos": [60, 80], "size": [170, 60] },
+    { "id": "queue", "type": "backend", "label": "刷新队列", "pos": [330, 120], "size": [150, 60] },
+    { "id": "cb", "type": "backend", "label": "熔断器", "pos": [330, 260], "size": [150, 60] },
+    { "id": "probe", "type": "backend", "label": "删除探测", "pos": [330, 400], "size": [150, 60] },
+    { "id": "api", "type": "backend", "label": "文档 API", "pos": [590, 240], "size": [150, 60] },
+    { "id": "be", "type": "external", "label": "后端", "pos": [820, 240], "size": [120, 60] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "features", "wraps": ["dm", "dlg", "queue", "cb", "probe"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "dm", "to": "queue", "variant": "emphasis" },
+    { "id": "c2", "from": "dm", "to": "probe", "variant": "default" },
+    { "id": "c3", "from": "queue", "to": "cb", "variant": "default" },
+    { "id": "c4", "from": "queue", "to": "api", "variant": "emphasis" },
+    { "id": "c5", "from": "dlg", "to": "api", "variant": "default" },
+    { "id": "c6", "from": "api", "to": "be", "variant": "default" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "文档管理要点", "items": [
+      "分页+过滤+多选",
+      "刷新队列串行合并",
+      "4xx 不触熔断",
+      "删除后探测核对"
+    ] }
+  ]
+}

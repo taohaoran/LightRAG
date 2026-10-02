@@ -1,0 +1,16 @@
+{
+  "schema_version": 1, "diagram_type": "dataflow",
+  "meta": { "title": "文本分块管道数据流", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1200, 560] },
+  "stages": [ { "label": "合并文本" }, { "label": "选策略" }, { "label": "切分" }, { "label": "chunk 输出" } ],
+  "nodes": [
+    { "id": "txt", "type": "frontend", "label": "blocks.jsonl", "stage": 0, "row": 0 },
+    { "id": "sel", "type": "backend", "label": "F/R/V/P", "stage": 1, "row": 0 },
+    { "id": "cut", "type": "backend", "label": "切分器", "stage": 2, "row": 0 },
+    { "id": "ck", "type": "database", "label": "chunk+span", "stage": 3, "row": 0 }
+  ],
+  "flows": [
+    { "from": "txt", "to": "sel", "label": "文本", "variant": "emphasis", "route": "straight" },
+    { "from": "sel", "to": "cut", "label": "策略", "variant": "emphasis", "route": "straight" },
+    { "from": "cut", "to": "ck", "label": "切片", "variant": "emphasis", "route": "straight" }
+  ]
+}

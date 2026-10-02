@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": { "title": "实体提取数据流", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1080, 560] },
+  "stages": [
+    { "label": "输入分块" },
+    { "label": "LLM 提取" },
+    { "label": "合并去重" },
+    { "label": "落存储" }
+  ],
+  "nodes": [
+    { "id": "chunks", "type": "database", "label": "文本块 chunks", "sublabel": "KV", "stage": 0, "row": 0 },
+    { "id": "extract", "type": "cloud", "label": "提取 LLM", "sublabel": "gleaning", "stage": 1, "row": 0 },
+    { "id": "parse", "type": "backend", "label": "结果解析", "sublabel": "JSON 结构化", "stage": 1, "row": 1 },
+    { "id": "merge", "type": "backend", "label": "合并节点/边", "sublabel": "去重摘要", "stage": 2, "row": 0 },
+    { "id": "graph", "type": "database", "label": "图存储", "stage": 3, "row": 0 },
+    { "id": "evdb", "type": "database", "label": "实体向量库", "stage": 3, "row": 1 },
+    { "id": "rvdb", "type": "database", "label": "关系向量库", "stage": 3, "row": 2 }
+  ],
+  "flows": [
+    { "from": "chunks", "to": "extract", "label": "块文本", "variant": "emphasis", "route": "straight" },
+    { "from": "extract", "to": "parse", "label": "JSON", "variant": "default", "route": "straight", "labelDy": 30 },
+    { "from": "parse", "to": "merge", "label": "实体/关系", "variant": "default", "route": "straight" },
+    { "from": "merge", "to": "graph", "label": "写图", "variant": "default", "route": "straight", "labelDy": -20 },
+    { "from": "merge", "to": "evdb", "label": "嵌入", "variant": "default", "route": "straight" },
+    { "from": "merge", "to": "rvdb", "label": "嵌入", "variant": "default", "route": "straight", "labelDy": 20 }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "管道", "items": ["块文本进 → 提取 → 合并 → 图与向量库", "跨存储无事务", "外部 LLM 不在本仓库"] }
+  ]
+}

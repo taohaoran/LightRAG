@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": { "title": "KG 查询调用时序", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1080, 720] },
+  "participants": [
+    { "id": "rag", "type": "external", "label": "主类" },
+    { "id": "valid", "type": "security", "label": "查询校验" },
+    { "id": "kw", "type": "backend", "label": "关键词抽取" },
+    { "id": "search", "type": "backend", "label": "KG 搜索" },
+    { "id": "ctx", "type": "backend", "label": "上下文拼装" },
+    { "id": "llm", "type": "cloud", "label": "查询 LLM" }
+  ],
+  "messages": [
+    { "id": "m1", "from": "rag", "to": "valid", "y": 160, "label": "aquery 准入", "variant": "emphasis" },
+    { "id": "m2", "from": "valid", "to": "rag", "y": 220, "label": "通过/拒绝", "variant": "return" },
+    { "id": "m3", "from": "rag", "to": "kw", "y": 280, "label": "抽 high/low 关键词", "variant": "default" },
+    { "id": "m4", "from": "kw", "to": "search", "y": 340, "label": "按 mode 召回", "variant": "default" },
+    { "id": "m5", "from": "search", "to": "ctx", "y": 410, "label": "实体/关系/chunk", "variant": "default" },
+    { "id": "m6", "from": "ctx", "to": "llm", "y": 480, "label": "按 token 预算生成", "variant": "emphasis" },
+    { "id": "m7", "from": "llm", "to": "rag", "y": 560, "label": "QueryResult 流/文本", "variant": "return" }
+  ]
+}

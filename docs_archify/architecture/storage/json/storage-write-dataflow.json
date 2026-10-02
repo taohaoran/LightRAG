@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": { "title": "跨存储写入数据流", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1000, 360] },
+  "stages": [
+    { "label": "文档入队" },
+    { "label": "切块提取" },
+    { "label": "落四类存储" }
+  ],
+  "nodes": [
+    { "id": "doc", "type": "external", "label": "文档", "stage": 0, "row": 0 },
+    { "id": "proc", "type": "backend", "label": "切块+LLM提取", "stage": 1, "row": 0 },
+    { "id": "stores", "type": "database", "label": "KV/向量/图/状态", "stage": 2, "row": 0 }
+  ],
+  "flows": [
+    { "from": "doc", "to": "proc", "label": "原文", "variant": "emphasis", "route": "straight" },
+    { "from": "proc", "to": "stores", "label": "独立写", "variant": "default", "route": "straight" }
+  ],
+  "cards": [
+    { "dot": "amber", "title": "无事务", "items": [
+      "四类存储独立写",
+      "中间态自愈",
+      "失败 loud"
+    ] }
+  ]
+}

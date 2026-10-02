@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "检索交互架构图",
+    "quality_profile": "standard",
+    "locale": "zh-CN",
+    "viewBox": [1000, 560]
+  },
+  "components": [
+    { "id": "composer", "type": "frontend", "label": "QueryComposer", "pos": [60, 80], "size": [160, 60] },
+    { "id": "list", "type": "frontend", "label": "MessageList", "pos": [60, 240], "size": [160, 60] },
+    { "id": "hook", "type": "backend", "label": "useQuerySession", "pos": [330, 160], "size": [170, 80] },
+    { "id": "util", "type": "backend", "label": "分块工具", "pos": [330, 340], "size": [170, 60] },
+    { "id": "api", "type": "backend", "label": "API 客户端", "pos": [600, 160], "size": [150, 60] },
+    { "id": "store", "type": "database", "label": "历史 store", "pos": [600, 340], "size": [150, 60] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "features/retrieval", "wraps": ["composer", "list", "hook", "util"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "composer", "to": "hook", "variant": "emphasis" },
+    { "id": "c2", "from": "hook", "to": "list", "variant": "default" },
+    { "id": "c3", "from": "hook", "to": "util", "variant": "default" },
+    { "id": "c4", "from": "hook", "to": "api", "variant": "emphasis" },
+    { "id": "c5", "from": "hook", "to": "store", "variant": "dashed" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "交互要点", "items": [
+      "useQuerySession 管会话",
+      "SSE 逐 chunk 累积",
+      "AbortController 停止",
+      "认证失败不渲染气泡"
+    ] }
+  ]
+}

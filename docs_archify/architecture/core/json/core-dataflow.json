@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": { "title": "查询管线数据流", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1080, 400] },
+  "stages": [
+    { "label": "查询" },
+    { "label": "检索" },
+    { "label": "重排" },
+    { "label": "生成" }
+  ],
+  "nodes": [
+    { "id": "q", "type": "external", "label": "用户问题", "stage": 0, "row": 0 },
+    { "id": "ret", "type": "backend", "label": "5 模式检索", "sublabel": "local/global/mix", "stage": 1, "row": 0 },
+    { "id": "rerank", "type": "backend", "label": "rerank", "stage": 2, "row": 0 },
+    { "id": "gen", "type": "cloud", "label": "LLM 生成", "stage": 3, "row": 0 }
+  ],
+  "flows": [
+    { "from": "q", "to": "ret", "label": "查询", "variant": "emphasis", "route": "straight" },
+    { "from": "ret", "to": "rerank", "label": "实体/块", "variant": "default", "route": "straight" },
+    { "from": "rerank", "to": "gen", "label": "上下文", "variant": "default", "route": "straight" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "查询", "items": ["问题→多模式检索→重排→生成", "mix 推荐配 reranker"] }
+  ]
+}

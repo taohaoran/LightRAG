@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": { "title": "pipeline 域组件架构", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1080, 460] },
+  "components": [
+    { "id": "l04", "type": "backend", "label": "摄入管线", "sublabel": "pipeline-mixin", "pos": [40, 180], "size": [160, 60] },
+    { "id": "l05", "type": "messagebus", "label": "摄入邮箱", "sublabel": "pipeline-ingress", "pos": [280, 60], "size": [150, 56] },
+    { "id": "l06", "type": "backend", "label": "管线工具", "sublabel": "utils-pipeline", "pos": [280, 180], "size": [150, 56] },
+    { "id": "l07", "type": "backend", "label": "多模态上下文", "sublabel": "multimodal", "pos": [280, 300], "size": [150, 56] },
+    { "id": "parse", "type": "external", "label": "解析器", "pos": [520, 60], "size": [120, 56] },
+    { "id": "vlm", "type": "cloud", "label": "VLM 服务", "pos": [520, 300], "size": [120, 56] },
+    { "id": "store", "type": "database", "label": "存储域", "pos": [520, 180], "size": [120, 56] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "pipeline 域（本仓库）", "wraps": ["l04", "l05", "l06", "l07"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "l04", "to": "l05", "label": "投递唤醒", "variant": "emphasis", "fromSide": "right", "toSide": "left" },
+    { "id": "c2", "from": "l04", "to": "l06", "label": "字段/哈希", "variant": "default", "fromSide": "right", "toSide": "left" },
+    { "id": "c3", "from": "l04", "to": "l07", "label": "上下文", "variant": "default", "fromSide": "right", "toSide": "left" },
+    { "id": "c4", "from": "l04", "to": "parse", "label": "分发", "variant": "dashed", "fromSide": "top", "toSide": "bottom" },
+    { "id": "c5", "from": "l07", "to": "vlm", "label": "喂 VLM", "variant": "dashed", "fromSide": "right", "toSide": "left" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "pipeline 域", "items": ["邮箱唯一唤醒通道", "doc_status 是真相", "FAILED 仅手动重试"] }
+  ]
+}

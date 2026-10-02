@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": { "title": "文档身份去重数据流", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1080, 420] },
+  "stages": [
+    { "label": "输入" },
+    { "label": "归一化" },
+    { "label": "哈希" },
+    { "label": "查重" }
+  ],
+  "nodes": [
+    { "id": "raw", "type": "frontend", "label": "原始文本", "stage": 0, "row": 0 },
+    { "id": "norm", "type": "backend", "label": "归一化合并文本", "stage": 1, "row": 0 },
+    { "id": "hash", "type": "backend", "label": "MD5 content_hash", "stage": 2, "row": 0 },
+    { "id": "lock", "type": "security", "label": "source 命名锁", "stage": 2, "row": 1 },
+    { "id": "dedup", "type": "database", "label": "重复文档查询", "stage": 3, "row": 0 }
+  ],
+  "flows": [
+    { "from": "raw", "to": "norm", "label": "文本", "variant": "emphasis", "route": "straight" },
+    { "from": "norm", "to": "hash", "label": "归一化", "variant": "default", "route": "straight" },
+    { "from": "hash", "to": "lock", "label": "加锁", "variant": "dashed", "route": "straight", "labelDy": 30 },
+    { "from": "hash", "to": "dedup", "label": "按 hash 查", "variant": "default", "route": "straight" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "管道", "items": ["文本→归一→哈希→查重", "source_key 命名锁防并发竞争"] }
+  ]
+}

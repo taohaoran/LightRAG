@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "用户交互数据流",
+    "quality_profile": "standard",
+    "locale": "zh-CN",
+    "viewBox": [
+      1300,
+      400
+    ]
+  },
+  "stages": [
+    {
+      "label": "用户"
+    },
+    {
+      "label": "UI 组件"
+    },
+    {
+      "label": "store"
+    },
+    {
+      "label": "API"
+    },
+    {
+      "label": "后端"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "type": "frontend",
+      "label": "用户操作",
+      "stage": 0,
+      "row": 0
+    },
+    {
+      "id": "n2",
+      "type": "frontend",
+      "label": "组件",
+      "stage": 1,
+      "row": 0
+    },
+    {
+      "id": "n3",
+      "type": "database",
+      "label": "zustand",
+      "stage": 2,
+      "row": 0
+    },
+    {
+      "id": "n4",
+      "type": "backend",
+      "label": "axios",
+      "stage": 3,
+      "row": 0
+    },
+    {
+      "id": "n5",
+      "type": "external",
+      "label": "REST/SSE",
+      "stage": 4,
+      "row": 0
+    }
+  ],
+  "flows": [
+    {
+      "from": "n1",
+      "to": "n2",
+      "label": "交互",
+      "variant": "emphasis"
+    },
+    {
+      "from": "n2",
+      "to": "n3",
+      "label": "setState",
+      "variant": "default"
+    },
+    {
+      "from": "n4",
+      "to": "n5",
+      "label": "HTTP",
+      "variant": "default"
+    }
+  ]
+}

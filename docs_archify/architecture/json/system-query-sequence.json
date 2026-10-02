@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "LightRAG 查询请求时序图",
+    "quality_profile": "standard",
+    "locale": "zh-CN",
+    "viewBox": [1100, 760]
+  },
+  "participants": [
+    { "id": "user", "type": "external", "label": "用户" },
+    { "id": "webui", "type": "frontend", "label": "WebUI" },
+    { "id": "api", "type": "backend", "label": "API Server" },
+    { "id": "auth", "type": "security", "label": "鉴权层" },
+    { "id": "rag", "type": "backend", "label": "LightRAG" },
+    { "id": "retrieve", "type": "backend", "label": "检索引擎" },
+    { "id": "store", "type": "database", "label": "4类存储" },
+    { "id": "llm", "type": "external", "label": "LLM服务" }
+  ],
+  "messages": [
+    { "id": "m1", "from": "user", "to": "webui", "y": 180, "label": "输入问题", "variant": "emphasis" },
+    { "id": "m2", "from": "webui", "to": "api", "y": 215, "label": "POST /query", "variant": "default" },
+    { "id": "m3", "from": "api", "to": "auth", "y": 250, "label": "token校验", "variant": "security" },
+    { "id": "m4", "from": "auth", "to": "api", "y": 285, "label": "通过", "variant": "return" },
+    { "id": "m5", "from": "api", "to": "rag", "y": 320, "label": "aquery(mode=mix)", "variant": "emphasis" },
+    { "id": "m6", "from": "rag", "to": "retrieve", "y": 355, "label": "多模式检索", "variant": "default" },
+    { "id": "m7", "from": "retrieve", "to": "store", "y": 390, "label": "查图谱+向量+KV", "variant": "default" },
+    { "id": "m8", "from": "store", "to": "retrieve", "y": 425, "label": "返回上下文", "variant": "return" },
+    { "id": "m9", "from": "retrieve", "to": "rag", "y": 460, "label": "重排后上下文", "variant": "return" },
+    { "id": "m10", "from": "rag", "to": "llm", "y": 495, "label": "prompt+上下文", "variant": "dashed" },
+    { "id": "m11", "from": "llm", "to": "rag", "y": 530, "label": "流式生成", "variant": "return" },
+    { "id": "m12", "from": "rag", "to": "api", "y": 565, "label": "SSE流", "variant": "return" },
+    { "id": "m13", "from": "api", "to": "webui", "y": 600, "label": "流式响应", "variant": "return" },
+    { "id": "m14", "from": "webui", "to": "user", "y": 635, "label": "渲染答案", "variant": "return" }
+  ]
+}

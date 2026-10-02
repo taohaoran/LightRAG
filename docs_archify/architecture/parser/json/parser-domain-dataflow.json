@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "文档解析到 sidecar 数据流",
+    "quality_profile": "showcase",
+    "locale": "zh-CN",
+    "viewBox": [1200, 620]
+  },
+  "stages": [
+    { "label": "文档源" },
+    { "label": "选引擎" },
+    { "label": "解析" },
+    { "label": "IRDoc" },
+    { "label": "sidecar 输出" }
+  ],
+  "nodes": [
+    { "id": "doc", "type": "frontend", "label": "源文档", "stage": 0, "row": 0 },
+    { "id": "route", "type": "backend", "label": "路由", "stage": 1, "row": 0 },
+    { "id": "local", "type": "backend", "label": "本地解析", "stage": 2, "row": 0 },
+    { "id": "remote", "type": "external", "label": "外部解析", "stage": 2, "row": 1 },
+    { "id": "ir", "type": "backend", "label": "IRDoc", "stage": 3, "row": 0 },
+    { "id": "blocks", "type": "database", "label": "blocks.jsonl", "stage": 4, "row": 0 },
+    { "id": "assets", "type": "database", "label": "assets/", "stage": 4, "row": 1 }
+  ],
+  "flows": [
+    { "from": "doc", "to": "route", "label": "文档", "variant": "emphasis", "route": "straight" },
+    { "from": "route", "to": "local", "label": "native/legacy", "variant": "emphasis", "route": "straight" },
+    { "from": "route", "to": "remote", "label": "mineru/docling", "variant": "dashed", "route": "bottom-channel" },
+    { "from": "local", "to": "ir", "label": "结构", "variant": "default", "route": "straight" },
+    { "from": "remote", "to": "ir", "label": "结构", "variant": "default", "route": "bottom-channel" },
+    { "from": "ir", "to": "blocks", "label": "块文本", "variant": "emphasis", "route": "straight" },
+    { "from": "ir", "to": "assets", "label": "资产", "variant": "default", "route": "bottom-channel" }
+  ]
+}

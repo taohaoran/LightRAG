@@ -1,0 +1,19 @@
+{
+  "schema_version": 1, "diagram_type": "dataflow",
+  "meta": { "title": "向量分块数据流", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1200, 560] },
+  "stages": [ { "label": "文本" }, { "label": "句切" }, { "label": "嵌入分组" }, { "label": "超界重切" }, { "label": "chunk" } ],
+  "nodes": [
+    { "id": "txt", "type": "frontend", "label": "文本", "stage": 0, "row": 0 },
+    { "id": "sent", "type": "backend", "label": "句切分", "stage": 1, "row": 0 },
+    { "id": "emb", "type": "backend", "label": "向量分组", "stage": 2, "row": 0 },
+    { "id": "rec", "type": "backend", "label": "回退R", "stage": 3, "row": 0 },
+    { "id": "ck", "type": "database", "label": "chunk", "stage": 4, "row": 0 }
+  ],
+  "flows": [
+    { "from": "txt", "to": "sent", "label": "文本", "variant": "emphasis", "route": "straight" },
+    { "from": "sent", "to": "emb", "label": "句", "variant": "emphasis", "route": "straight" },
+    { "from": "emb", "to": "rec", "label": "超界", "variant": "dashed", "route": "straight" },
+    { "from": "emb", "to": "ck", "label": "成块", "variant": "default", "route": "bottom-channel" },
+    { "from": "rec", "to": "ck", "label": "重切", "variant": "default", "route": "straight" }
+  ]
+}

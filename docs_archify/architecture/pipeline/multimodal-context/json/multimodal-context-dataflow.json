@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": { "title": "多模态上下文装配数据流", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1080, 420] },
+  "stages": [
+    { "label": "sidecar 块" },
+    { "label": "归一化" },
+    { "label": "上下文装配" },
+    { "label": "喂 VLM" }
+  ],
+  "nodes": [
+    { "id": "block", "type": "database", "label": "sidecar 块", "sublabel": "block/drawing/table", "stage": 0, "row": 0 },
+    { "id": "norm", "type": "backend", "label": "schema 归一", "sublabel": "heading 面包屑", "stage": 1, "row": 0 },
+    { "id": "atom", "type": "backend", "label": "原子化+定位", "stage": 2, "row": 0 },
+    { "id": "trim", "type": "backend", "label": "按预算修剪", "stage": 2, "row": 1 },
+    { "id": "vlm", "type": "cloud", "label": "VLM 分析", "stage": 3, "row": 0 }
+  ],
+  "flows": [
+    { "from": "block", "to": "norm", "label": "块", "variant": "emphasis", "route": "straight" },
+    { "from": "norm", "to": "atom", "label": "归一", "variant": "default", "route": "straight" },
+    { "from": "atom", "to": "trim", "label": "超预算", "variant": "dashed", "route": "straight", "labelDy": 30 },
+    { "from": "trim", "to": "vlm", "label": "上下文", "variant": "default", "route": "straight" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "管道", "items": ["sidecar 块→归一→装配→修剪→VLM", "外部 VLM 不在本仓库"] }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": { "title": "storage 域：四类存储 × 后端矩阵", "quality_profile": "showcase", "locale": "zh-CN" },
+  "components": [
+    { "id": "caller", "type": "external", "label": "LightRAG", "pos": [50, 240], "size": [120, 60] },
+    { "id": "kv", "type": "backend", "label": "KV 抽象", "pos": [280, 60], "size": [130, 54] },
+    { "id": "vec", "type": "backend", "label": "向量抽象", "pos": [280, 160], "size": [130, 54] },
+    { "id": "graph", "type": "backend", "label": "图抽象", "pos": [280, 260], "size": [130, 54] },
+    { "id": "doc", "type": "backend", "label": "文档状态", "pos": [280, 360], "size": [130, 54] },
+    { "id": "file", "type": "database", "label": "文件型家族", "pos": [560, 60], "size": [150, 54], "tag": "两通道围栏" },
+    { "id": "pg", "type": "database", "label": "PG 家族", "pos": [560, 160], "size": [150, 54] },
+    { "id": "docdb", "type": "database", "label": "Mongo/OS", "pos": [560, 260], "size": [150, 54] },
+    { "id": "vmat", "type": "database", "label": "Milvus/Qdrant", "pos": [560, 360], "size": [150, 54] },
+    { "id": "gdb", "type": "external", "label": "Neo4j/Memgraph", "pos": [560, 450], "size": [150, 54] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "可插拔后端矩阵", "wraps": ["file", "pg", "docdb", "vmat", "gdb"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "caller", "to": "kv", "variant": "default" },
+    { "id": "c2", "from": "caller", "to": "vec", "variant": "default" },
+    { "id": "c3", "from": "caller", "to": "graph", "variant": "emphasis" },
+    { "id": "c4", "from": "caller", "to": "doc", "variant": "default" },
+    { "id": "c5", "from": "kv", "to": "file", "variant": "dashed" },
+    { "id": "c6", "from": "vec", "to": "vmat", "variant": "default" },
+    { "id": "c7", "from": "graph", "to": "gdb", "variant": "default" },
+    { "id": "c8", "from": "doc", "to": "pg", "variant": "dashed" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "要点", "items": [
+      "四类 ABC 契约",
+      "字符串后端注册表",
+      "跨存储无事务"
+    ] }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "配置加载数据流",
+    "quality_profile": "standard",
+    "locale": "zh-CN",
+    "viewBox": [1300, 500]
+  },
+  "stages": [
+    { "label": "来源" },
+    { "label": "解析" },
+    { "label": "校验" },
+    { "label": "缓存" },
+    { "label": "消费" }
+  ],
+  "nodes": [
+    { "id": "n1", "type": "external", "label": ".env", "stage": 0, "row": 0 },
+    { "id": "n2", "type": "external", "label": "CLI", "stage": 0, "row": 1 },
+    { "id": "n3", "type": "backend", "label": "parse_args", "stage": 1, "row": 0 },
+    { "id": "n5", "type": "backend", "label": "四项校验", "stage": 2, "row": 0 },
+    { "id": "n6", "type": "backend", "label": "global_args", "stage": 3, "row": 0 },
+    { "id": "n7", "type": "backend", "label": "L27 装配", "stage": 4, "row": 0 },
+    { "id": "n8", "type": "backend", "label": "L29 中间件", "stage": 4, "row": 1 }
+  ],
+  "flows": [
+    { "from": "n1", "to": "n3", "label": "env", "variant": "default" },
+    { "from": "n2", "to": "n3", "label": "argv", "variant": "default" },
+    { "from": "n3", "to": "n5", "label": "解析", "variant": "emphasis" },
+    { "from": "n5", "to": "n6", "label": "通过", "variant": "emphasis" },
+    { "from": "n6", "to": "n7", "label": "读取", "variant": "default" },
+    { "from": "n6", "to": "n8", "label": "读取", "variant": "default" }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": { "title": "向量后端延迟嵌入共性数据流", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1000, 360] },
+  "stages": [
+    { "label": "upsert 缓冲" },
+    { "label": "批量嵌入" },
+    { "label": "写 collection" }
+  ],
+  "nodes": [
+    { "id": "buf", "type": "backend", "label": "_PendingVectorDoc", "stage": 0, "row": 0 },
+    { "id": "emb", "type": "external", "label": "嵌入模型一次", "stage": 1, "row": 0 },
+    { "id": "coll", "type": "database", "label": "向量 collection", "stage": 2, "row": 0 }
+  ],
+  "flows": [
+    { "from": "buf", "to": "emb", "label": "index_done_callback", "variant": "emphasis", "route": "straight" },
+    { "from": "emb", "to": "coll", "label": "落库", "variant": "default", "route": "straight" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "共性", "items": [
+      "upsert 时 vector=None",
+      "同 id 只嵌入一次",
+      "Redis 例外即时写"
+    ] }
+  ]
+}

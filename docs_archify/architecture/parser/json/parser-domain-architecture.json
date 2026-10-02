@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "parser 域四引擎路由架构",
+    "quality_profile": "showcase",
+    "locale": "zh-CN"
+  },
+  "components": [
+    { "id": "pipe", "type": "frontend", "label": "摄入管线", "pos": [40, 190], "size": [130, 56], "tag": "上游" },
+    { "id": "route", "type": "backend", "label": "路由解析", "pos": [250, 190], "size": [130, 56] },
+    { "id": "reg", "type": "backend", "label": "引擎注册表", "pos": [250, 80], "size": [130, 56] },
+    { "id": "native", "type": "backend", "label": "native 引擎", "pos": [470, 80], "size": [130, 56], "tag": "docx/md" },
+    { "id": "legacy", "type": "backend", "label": "legacy 引擎", "pos": [470, 190], "size": [130, 56] },
+    { "id": "remote", "type": "backend", "label": "外部引擎", "pos": [470, 300], "size": [130, 56], "tag": "mineru/docling" },
+    { "id": "sidecar", "type": "backend", "label": "sidecar 写入", "pos": [690, 190], "size": [140, 56], "tag": "*.parsed/" },
+    { "id": "ext", "type": "external", "label": "MinerU/Docling 服务", "pos": [690, 300], "size": [150, 56], "tag": "不在本仓库" }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "parser 域", "wraps": ["route", "reg", "native", "legacy", "remote", "sidecar"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "pipe", "to": "route", "variant": "emphasis" },
+    { "id": "c2", "from": "route", "to": "reg", "variant": "default" },
+    { "id": "c3", "from": "reg", "to": "native", "variant": "emphasis" },
+    { "id": "c4", "from": "reg", "to": "legacy", "variant": "default" },
+    { "id": "c5", "from": "reg", "to": "remote", "variant": "default" },
+    { "id": "c6", "from": "remote", "to": "ext", "variant": "dashed" },
+    { "id": "c7", "from": "native", "to": "sidecar", "variant": "default" },
+    { "id": "c8", "from": "legacy", "to": "sidecar", "variant": "emphasis" }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "主路径",
+      "items": [
+        "管线→路由→注册表→引擎→sidecar",
+        "四引擎统一 BaseParser 契约",
+        "外部服务仅客户端，不在本仓库"
+      ]
+    }
+  ]
+}

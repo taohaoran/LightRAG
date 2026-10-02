@@ -1,0 +1,20 @@
+{
+  "schema_version": 1, "diagram_type": "sequence",
+  "meta": { "title": "策略选择调用时序", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1080, 760] },
+  "participants": [
+    { "id": "pp", "type": "frontend", "label": "pipeline" },
+    { "id": "rt", "type": "backend", "label": "注册表" },
+    { "id": "pl", "type": "backend", "label": "插件发现" },
+    { "id": "bd", "type": "backend", "label": "Binding" },
+    { "id": "im", "type": "backend", "label": "分块实现" }
+  ],
+  "messages": [
+    { "id": "m1", "from": "pp", "to": "rt", "y": 160, "label": "resolve(name)", "variant": "emphasis" },
+    { "id": "m2", "from": "rt", "to": "pl", "y": 215, "label": "discover()", "variant": "default" },
+    { "id": "m3", "from": "pl", "to": "rt", "y": 270, "label": "注册表项", "variant": "return" },
+    { "id": "m4", "from": "rt", "to": "bd", "y": 330, "label": "构造 Binding", "variant": "default" },
+    { "id": "m5", "from": "bd", "to": "im", "y": 390, "label": "惰性装载", "variant": "default" },
+    { "id": "m6", "from": "im", "to": "bd", "y": 450, "label": "chunk 列表", "variant": "return" },
+    { "id": "m7", "from": "bd", "to": "pp", "y": 510, "label": "结果", "variant": "return" }
+  ]
+}

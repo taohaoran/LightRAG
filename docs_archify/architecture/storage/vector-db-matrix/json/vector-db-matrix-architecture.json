@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": { "title": "向量与缓存后端矩阵", "quality_profile": "showcase", "locale": "zh-CN" },
+  "components": [
+    { "id": "caller", "type": "external", "label": "LightRAG", "pos": [60, 220], "size": [130, 60] },
+    { "id": "milvus", "type": "backend", "label": "MilvusVector", "pos": [360, 80], "size": [170, 56] },
+    { "id": "qdrant", "type": "backend", "label": "QdrantVector", "pos": [360, 200], "size": [170, 56] },
+    { "id": "redis", "type": "backend", "label": "Redis KV/状态", "pos": [360, 320], "size": [170, 56] },
+    { "id": "milvussvc", "type": "external", "label": "Milvus 服务", "pos": [700, 85], "size": [150, 56] },
+    { "id": "qdrantvc", "type": "external", "label": "Qdrant 服务", "pos": [700, 205], "size": [150, 56] },
+    { "id": "redissvc", "type": "database", "label": "Redis 服务", "pos": [700, 325], "size": [150, 56] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "后端矩阵实现", "wraps": ["milvus", "qdrant", "redis"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "caller", "to": "milvus", "variant": "default" },
+    { "id": "c2", "from": "caller", "to": "qdrant", "variant": "emphasis" },
+    { "id": "c3", "from": "caller", "to": "redis", "variant": "default" },
+    { "id": "c4", "from": "milvus", "to": "milvussvc", "variant": "default" },
+    { "id": "c5", "from": "qdrant", "to": "qdrantvc", "variant": "default" },
+    { "id": "c6", "from": "redis", "to": "redissvc", "variant": "default" }
+  ],
+  "cards": [
+    { "dot": "rose", "title": "要点", "items": [
+      "向量后端延迟嵌入缓冲",
+      "Qdrant 用 payload 分区",
+      "Redis 为缓存即时写"
+    ] }
+  ]
+}

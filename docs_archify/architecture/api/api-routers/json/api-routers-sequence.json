@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "同步查询请求时序",
+    "quality_profile": "showcase",
+    "locale": "zh-CN",
+    "viewBox": [1100, 760]
+  },
+  "participants": [
+    { "id": "client", "type": "external", "label": "客户端" },
+    { "id": "auth", "type": "security", "label": "认证依赖" },
+    { "id": "route", "type": "backend", "label": "查询路由" },
+    { "id": "rag", "type": "backend", "label": "LightRAG" },
+    { "id": "llm", "type": "cloud", "label": "LLM 服务" }
+  ],
+  "messages": [
+    { "id": "m1", "from": "client", "to": "auth", "y": 160, "label": "POST /query", "variant": "emphasis" },
+    { "id": "m2", "from": "auth", "to": "route", "y": 220, "label": "凭据通过", "variant": "return" },
+    { "id": "m3", "from": "route", "to": "rag", "y": 280, "label": "aquery_llm(query, param)", "variant": "emphasis" },
+    { "id": "m4", "from": "rag", "to": "llm", "y": 340, "label": "检索+提示词", "variant": "default" },
+    { "id": "m5", "from": "llm", "to": "rag", "y": 400, "label": "生成回答", "variant": "return" },
+    { "id": "m6", "from": "rag", "to": "route", "y": 460, "label": "llm_response+references", "variant": "return" },
+    { "id": "m8", "from": "route", "to": "client", "y": 580, "label": "QueryResponse JSON", "variant": "return" },
+    { "id": "m9", "from": "auth", "to": "client", "y": 660, "label": "凭据失败 401", "variant": "return" }
+  ]
+}

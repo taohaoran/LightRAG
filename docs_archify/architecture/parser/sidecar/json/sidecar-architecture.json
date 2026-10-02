@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Sidecar 写入器架构",
+    "quality_profile": "showcase",
+    "locale": "zh-CN"
+  },
+  "components": [
+    { "id": "ir", "type": "frontend", "label": "IRDoc 模型", "pos": [40, 190], "size": [130, 56], "tag": "引擎适配器产出" },
+    { "id": "wr", "type": "backend", "label": "write_sidecar", "pos": [260, 190], "size": [140, 56], "tag": "唯一可执行规范" },
+    { "id": "bj", "type": "database", "label": "blocks.jsonl", "pos": [480, 190], "size": [130, 56] },
+    { "id": "mm", "type": "database", "label": "多模态 json", "pos": [480, 80], "size": [140, 56], "tag": "条件写" },
+    { "id": "ad", "type": "database", "label": "assets/ 目录", "pos": [480, 300], "size": [130, 56] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "sidecar 写入层", "wraps": ["ir", "wr"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "ir", "to": "wr", "variant": "emphasis" },
+    { "id": "c2", "from": "wr", "to": "bj", "variant": "emphasis" },
+    { "id": "c3", "from": "wr", "to": "mm", "variant": "default" },
+    { "id": "c4", "from": "wr", "to": "ad", "variant": "default" }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "主路径",
+      "items": [
+        "IRDoc→write_sidecar→*.parsed/ 目录",
+        "id 分配/渲染/物化集中在 writer",
+        "引擎适配器只翻译不嵌磁盘格式"
+      ]
+    }
+  ]
+}

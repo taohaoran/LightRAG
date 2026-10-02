@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Markdown 解析与图片防护架构",
+    "quality_profile": "showcase",
+    "locale": "zh-CN"
+  },
+  "components": [
+    { "id": "ad", "type": "backend", "label": "Markdown 适配器", "pos": [40, 190], "size": [130, 56], "tag": "NativeMarkdownParser" },
+    { "id": "ex", "type": "backend", "label": "结构抽取", "pos": [260, 80], "size": [130, 56], "tag": "extract_markdown" },
+    { "id": "tp", "type": "backend", "label": "textpack 解包", "pos": [260, 300], "size": [130, 56], "tag": "安全解压" },
+    { "id": "img", "type": "backend", "label": "图片解析器", "pos": [480, 190], "size": [130, 56], "tag": "四路 src" },
+    { "id": "bd", "type": "security", "label": "预算/SSRF 防护", "pos": [480, 300], "size": [130, 56], "tag": "字节/请求/时长" },
+    { "id": "ir", "type": "backend", "label": "IR 构建", "pos": [700, 80], "size": [130, 56], "tag": "产出 IRDoc" },
+    { "id": "sv", "type": "external", "label": "外部图片服务", "pos": [700, 300], "size": [140, 56], "tag": "不在本仓库源码内" }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "markdown 原生解析层", "wraps": ["ad", "ex", "tp", "img", "bd", "ir"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "ad", "to": "ex", "variant": "emphasis" },
+    { "id": "c2", "from": "ad", "to": "tp", "variant": "default" },
+    { "id": "c3", "from": "ex", "to": "img", "variant": "default" },
+    { "id": "c4", "from": "img", "to": "bd", "variant": "security" },
+    { "id": "c5", "from": "img", "to": "sv", "label": "守卫下载", "variant": "dashed" },
+    { "id": "c6", "from": "ex", "to": "ir", "variant": "emphasis" }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "主路径",
+      "items": [
+        "适配器→抽取→IR 构建",
+        "图片四路解析，越预算降级为外链",
+        "外部下载经 SSRF 与预算守卫"
+      ]
+    }
+  ]
+}

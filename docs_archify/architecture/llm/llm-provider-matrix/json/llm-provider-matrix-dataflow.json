@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": { "title": "角色到 provider 数据流", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1080, 400] },
+  "stages": [
+    { "label": "角色调用" },
+    { "label": "provider 函数" },
+    { "label": "缓存" },
+    { "label": "远端" }
+  ],
+  "nodes": [
+    { "id": "role", "type": "external", "label": "extract/query 角色", "stage": 0, "row": 0 },
+    { "id": "prov", "type": "backend", "label": "provider 绑定函数", "sublabel": "11 家同构", "stage": 1, "row": 0 },
+    { "id": "cache", "type": "database", "label": "LLM 响应缓存", "stage": 2, "row": 0 },
+    { "id": "svc", "type": "cloud", "label": "远端 LLM 服务", "stage": 3, "row": 0 }
+  ],
+  "flows": [
+    { "from": "role", "to": "prov", "label": "选 provider", "variant": "emphasis", "route": "straight" },
+    { "from": "prov", "to": "cache", "label": "查/写", "variant": "default", "route": "straight" },
+    { "from": "cache", "to": "svc", "label": "未命中调用", "variant": "dashed", "route": "straight" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "管道", "items": ["角色→provider→缓存→远端", "所有 provider 同构契约"] }
+  ]
+}

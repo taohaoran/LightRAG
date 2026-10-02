@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": { "title": "Admin 写门获取时序", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1080, 820] },
+  "participants": [
+    { "id": "caller", "type": "external", "label": "调用方" },
+    { "id": "gate", "type": "backend", "label": "写门" },
+    { "id": "alock", "type": "security", "label": "admin 锁" },
+    { "id": "pipe", "type": "messagebus", "label": "调度状态" },
+    { "id": "graph", "type": "database", "label": "图存储" }
+  ],
+  "messages": [
+    { "id": "m1", "from": "caller", "to": "gate", "y": 160, "label": "admin 写请求", "variant": "emphasis" },
+    { "id": "m2", "from": "gate", "to": "alock", "y": 225, "label": "等待获取(超时)", "variant": "default" },
+    { "id": "m3", "from": "alock", "to": "gate", "y": 290, "label": "获得 / 超时409", "variant": "return" },
+    { "id": "m4", "from": "gate", "to": "pipe", "y": 355, "label": "busy 预约", "variant": "default" },
+    { "id": "m5", "from": "pipe", "to": "gate", "y": 420, "label": "受理 / 拒绝", "variant": "return" },
+    { "id": "m6", "from": "gate", "to": "graph", "y": 490, "label": "业务写+commit", "variant": "emphasis" },
+    { "id": "m7", "from": "graph", "to": "gate", "y": 555, "label": "写完成", "variant": "return" },
+    { "id": "m8", "from": "gate", "to": "pipe", "y": 615, "label": "释放预约", "variant": "default" },
+    { "id": "m9", "from": "gate", "to": "alock", "y": 670, "label": "释放锁唤醒管线", "variant": "default" },
+    { "id": "m10", "from": "gate", "to": "caller", "y": 730, "label": "返回结果", "variant": "return" }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "diagram_type": "lifecycle",
+  "meta": { "title": "LightRAG 存储实例生命周期", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [980, 620] },
+  "lanes": [
+    { "id": "main", "label": "存储实例主链" }
+  ],
+  "states": [
+    { "id": "nc", "type": "start", "label": "未创建", "sublabel": "NOT_CREATED", "lane": "main", "col": 0, "tag": "初始" },
+    { "id": "cr", "type": "active", "label": "已构造", "sublabel": "__post_init__", "lane": "main", "col": 1, "tag": "构造期" },
+    { "id": "init", "type": "active", "label": "已初始化", "sublabel": "initialize_storages", "lane": "main", "col": 2, "tag": "可用" },
+    { "id": "fin", "type": "success", "label": "已终结", "sublabel": "finalize_storages", "lane": "main", "col": 3, "tag": "终态" }
+  ],
+  "transitions": [],
+  "cards": [
+    { "dot": "emerald", "title": "关键约束", "items": ["必须 await initialize_storages", "逐个 initialize 避免跨后端死锁", "否则报 __aenter__/history_messages 错"] }
+  ]
+}

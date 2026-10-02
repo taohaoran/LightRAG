@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "diagram_type": "lifecycle",
+  "meta": { "title": "文档处理状态机", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1080, 700] },
+  "lanes": [
+    { "id": "main", "label": "文档状态" }
+  ],
+  "states": [
+    { "id": "pending", "type": "start", "label": "待处理", "lane": "main", "col": 0 },
+    { "id": "processing", "type": "active", "label": "处理中", "lane": "main", "col": 1 },
+    { "id": "processed", "type": "success", "label": "已处理", "lane": "main", "col": 2 },
+    { "id": "failed", "type": "failure", "label": "失败", "lane": "main", "col": 2, "yOffset": 130 }
+  ],
+  "transitions": [
+    { "from": "pending", "to": "processing", "label": "开始" },
+    { "from": "processing", "to": "processed", "label": "完成" },
+    { "from": "processing", "to": "failed", "label": "出错" },
+    { "from": "failed", "to": "processing", "label": "手动重试" }
+  ]
+}

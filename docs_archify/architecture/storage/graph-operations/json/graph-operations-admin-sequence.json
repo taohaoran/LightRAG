@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": { "title": "admin 写门与提交时序", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1080, 640] },
+  "participants": [
+    { "id": "r", "type": "external", "label": "REST 路由" },
+    { "id": "gate", "type": "backend", "label": "写门" },
+    { "id": "busy", "type": "backend", "label": "busy 预留" },
+    { "id": "store", "type": "database", "label": "图存储" }
+  ],
+  "messages": [
+    { "id": "m1", "from": "r", "to": "gate", "y": 160, "label": "admin 写", "variant": "emphasis" },
+    { "id": "m2", "from": "gate", "to": "busy", "y": 230, "label": "等 admin 锁" },
+    { "id": "m3", "from": "busy", "to": "gate", "y": 290, "label": "获锁", "variant": "return" },
+    { "id": "m4", "from": "gate", "to": "busy", "y": 350, "label": "预留 busy" },
+    { "id": "m5", "from": "gate", "to": "store", "y": 420, "label": "提交变更" },
+    { "id": "m6", "from": "store", "to": "gate", "y": 490, "label": "ok 或拒绝", "variant": "return" },
+    { "id": "m7", "from": "gate", "to": "r", "y": 540, "label": "释放门返回", "variant": "return" }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "认证准入架构图",
+    "quality_profile": "standard",
+    "locale": "zh-CN",
+    "viewBox": [1000, 900]
+  },
+  "components": [
+    { "id": "client", "type": "external", "label": "客户端", "pos": [40, 60], "size": [110, 56] },
+    { "id": "body", "type": "security", "label": "BodyLimit", "pos": [240, 60], "size": [150, 60] },
+    { "id": "adm", "type": "security", "label": "Admission", "pos": [240, 190], "size": [150, 60] },
+    { "id": "jwt", "type": "security", "label": "AuthHandler", "pos": [240, 320], "size": [150, 60] },
+    { "id": "loginrl", "type": "security", "label": "登录限流", "pos": [240, 450], "size": [150, 60] },
+    { "id": "pw", "type": "backend", "label": "密码哈希", "pos": [720, 320], "size": [140, 60] },
+    { "id": "ticket", "type": "backend", "label": "AdmissionTicket", "pos": [520, 190], "size": [140, 60] },
+    { "id": "route", "type": "backend", "label": "路由层", "pos": [520, 450], "size": [140, 60] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "纯 ASGI 中间件层", "wraps": ["body", "adm"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "client", "to": "body", "variant": "emphasis" },
+    { "id": "c2", "from": "body", "to": "adm", "variant": "default" },
+    { "id": "c3", "from": "adm", "to": "jwt", "variant": "default" },
+    { "id": "c4", "from": "adm", "to": "ticket", "variant": "dashed" },
+    { "id": "c5", "from": "jwt", "to": "pw", "variant": "default" },
+    { "id": "c6", "from": "client", "to": "loginrl", "variant": "default" },
+    { "id": "c7", "from": "loginrl", "to": "jwt", "variant": "default" },
+    { "id": "c8", "from": "ticket", "to": "route", "variant": "dashed" },
+    { "id": "c9", "from": "jwt", "to": "route", "variant": "default" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "安全要点", "items": [
+      "body 读取前完成认证与预留",
+      "dummy bcrypt 均衡登录时序",
+      "JWT sub 长度 256 上限",
+      "票据三层单所有者交接"
+    ] }
+  ]
+}

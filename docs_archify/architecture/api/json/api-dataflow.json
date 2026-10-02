@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "api 请求处理数据流",
+    "quality_profile": "standard",
+    "locale": "zh-CN",
+    "viewBox": [
+      1300,
+      500
+    ]
+  },
+  "stages": [
+    {
+      "label": "接入"
+    },
+    {
+      "label": "安全"
+    },
+    {
+      "label": "路由"
+    },
+    {
+      "label": "核心"
+    },
+    {
+      "label": "响应"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "type": "external",
+      "label": "HTTP 请求",
+      "stage": 0,
+      "row": 0
+    },
+    {
+      "id": "n2",
+      "type": "security",
+      "label": "中间件",
+      "stage": 1,
+      "row": 0
+    },
+    {
+      "id": "n3",
+      "type": "security",
+      "label": "JWT 校验",
+      "stage": 1,
+      "row": 2
+    },
+    {
+      "id": "n4",
+      "type": "backend",
+      "label": "路由处理",
+      "stage": 2,
+      "row": 0
+    },
+    {
+      "id": "n5",
+      "type": "backend",
+      "label": "rag 调用",
+      "stage": 3,
+      "row": 0
+    },
+    {
+      "id": "n6",
+      "type": "cloud",
+      "label": "LLM 服务",
+      "stage": 3,
+      "row": 2
+    },
+    {
+      "id": "n7",
+      "type": "frontend",
+      "label": "JSON/SSE",
+      "stage": 4,
+      "row": 0
+    }
+  ],
+  "flows": [
+    {
+      "from": "n1",
+      "to": "n2",
+      "label": "请求",
+      "variant": "emphasis"
+    },
+    {
+      "from": "n2",
+      "to": "n3",
+      "variant": "default",
+      "label": "鉴权",
+      "labelDy": 30
+    },
+    {
+      "from": "n3",
+      "to": "n4",
+      "label": "通过",
+      "variant": "default"
+    },
+    {
+      "from": "n4",
+      "to": "n5",
+      "label": "调用",
+      "variant": "emphasis"
+    },
+    {
+      "from": "n5",
+      "to": "n6",
+      "variant": "default",
+      "label": "调用LLM",
+      "labelDy": 30
+    },
+    {
+      "from": "n5",
+      "to": "n7",
+      "label": "结果",
+      "variant": "dashed"
+    },
+    {
+      "from": "n6",
+      "to": "n5",
+      "label": "回答",
+      "variant": "dashed"
+    }
+  ]
+}

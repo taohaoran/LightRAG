@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": { "title": "入队唤醒时序", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1080, 620] },
+  "participants": [
+    { "id": "enq", "type": "backend", "label": "入队方" },
+    { "id": "mailbox", "type": "messagebus", "label": "摄入邮箱" },
+    { "id": "feeder", "type": "backend", "label": "管线 feeder" },
+    { "id": "docstat", "type": "database", "label": "doc_status" }
+  ],
+  "messages": [
+    { "id": "m1", "from": "enq", "to": "docstat", "y": 160, "label": "写初始状态", "variant": "default" },
+    { "id": "m2", "from": "enq", "to": "mailbox", "y": 230, "label": "投递唤醒消息", "variant": "emphasis" },
+    { "id": "m3", "from": "mailbox", "to": "feeder", "y": 300, "label": "唤醒取批", "variant": "default" },
+    { "id": "m4", "from": "feeder", "to": "docstat", "y": 370, "label": "strict scan 兜底", "variant": "dashed" },
+    { "id": "m5", "from": "feeder", "to": "enq", "y": 440, "label": "处理完成", "variant": "return" }
+  ]
+}

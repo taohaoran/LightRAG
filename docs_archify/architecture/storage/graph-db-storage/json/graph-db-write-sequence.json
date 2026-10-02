@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": { "title": "图写 Cypher 提交时序", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1000, 560] },
+  "participants": [
+    { "id": "pipe", "type": "external", "label": "管线" },
+    { "id": "store", "type": "backend", "label": "图存储" },
+    { "id": "drv", "type": "external", "label": "Bolt 驱动" },
+    { "id": "svc", "type": "external", "label": "图数据库" }
+  ],
+  "messages": [
+    { "id": "m1", "from": "pipe", "to": "store", "y": 160, "label": "upsert 节点/边", "variant": "emphasis" },
+    { "id": "m2", "from": "store", "to": "drv", "y": 230, "label": "Cypher MERGE" },
+    { "id": "m3", "from": "drv", "to": "svc", "y": 300, "label": "事务写" },
+    { "id": "m4", "from": "svc", "to": "drv", "y": 370, "label": "提交", "variant": "return" },
+    { "id": "m5", "from": "drv", "to": "store", "y": 430, "label": "ok", "variant": "return" },
+    { "id": "m6", "from": "store", "to": "pipe", "y": 460, "label": "回调完成", "variant": "return" }
+  ]
+}

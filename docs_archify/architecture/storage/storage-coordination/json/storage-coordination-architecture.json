@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": { "title": "存储协调共享组件拓扑", "quality_profile": "showcase", "locale": "zh-CN" },
+  "components": [
+    { "id": "api", "type": "external", "label": "API 主进程", "pos": [60, 60], "size": [150, 60] },
+    { "id": "worker1", "type": "frontend", "label": "工作进程 A", "pos": [60, 200], "size": [140, 56] },
+    { "id": "worker2", "type": "frontend", "label": "工作进程 B", "pos": [60, 300], "size": [140, 56] },
+    { "id": "mgr", "type": "backend", "label": "SyncManager", "pos": [360, 60], "size": [160, 60], "tag": "跨进程中介" },
+    { "id": "sdict", "type": "database", "label": "共享 dict 代理", "pos": [360, 180], "size": [160, 60], "tag": "Manager().dict" },
+    { "id": "flags", "type": "backend", "label": "storage_updated 标志", "pos": [360, 290], "size": [160, 60], "tag": "事件通道" },
+    { "id": "initfl", "type": "security", "label": "初始化旗 init_flags", "pos": [360, 400], "size": [160, 60] },
+    { "id": "holder", "type": "backend", "label": "键化持有者表", "pos": [660, 180], "size": [160, 60], "tag": "死锁回收" },
+    { "id": "pstat", "type": "database", "label": "pipeline_status", "pos": [660, 290], "size": [160, 60], "tag": "调度状态" }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "multiprocessing 共享层", "wraps": ["mgr", "sdict", "flags", "initfl"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "api", "to": "mgr", "label": "initialize_share_data", "variant": "emphasis" },
+    { "id": "c2", "from": "worker1", "to": "sdict", "label": "共享引用", "variant": "default" },
+    { "id": "c3", "from": "worker2", "to": "sdict", "label": "共享引用", "variant": "default" },
+    { "id": "c4", "from": "worker1", "to": "flags", "label": "读/置位", "variant": "default" },
+    { "id": "c5", "from": "worker2", "to": "flags", "label": "读/置位", "variant": "dashed" },
+    { "id": "c7", "from": "sdict", "to": "pstat", "label": "其一命名空间", "variant": "dashed" },
+    { "id": "c8", "from": "worker1", "to": "initfl", "label": "首个加载", "variant": "default" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "核心要点", "items": [
+      "单进程线程锁、多进程 Manager 代理双轨",
+      "标志是事件通道、文件指纹是状态通道",
+      "键化锁表带死进程租约回收"
+    ] }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "API 配置面架构图",
+    "quality_profile": "standard",
+    "locale": "zh-CN",
+    "viewBox": [1000, 800]
+  },
+  "components": [
+    { "id": "env", "type": "external", "label": ".env / 环境变量", "pos": [60, 60], "size": [170, 56] },
+    { "id": "cli", "type": "external", "label": "CLI 参数", "pos": [60, 180], "size": [170, 56] },
+    { "id": "parse", "type": "backend", "label": "parse_args", "pos": [330, 120], "size": [160, 60] },
+    { "id": "valid", "type": "backend", "label": "四组校验", "pos": [330, 260], "size": [160, 60] },
+    { "id": "global", "type": "backend", "label": "global_args", "pos": [330, 400], "size": [160, 60] },
+    { "id": "bundle", "type": "backend", "label": "UI 定制加载", "pos": [620, 120], "size": [170, 60] },
+    { "id": "consume", "type": "backend", "label": "消费方", "pos": [620, 400], "size": [170, 60] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "config.py", "wraps": ["parse", "valid", "global"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "env", "to": "parse", "variant": "default" },
+    { "id": "c2", "from": "cli", "to": "parse", "variant": "default" },
+    { "id": "c3", "from": "parse", "to": "valid", "variant": "emphasis" },
+    { "id": "c4", "from": "valid", "to": "global", "variant": "emphasis" },
+    { "id": "c5", "from": "global", "to": "consume", "variant": "emphasis" },
+    { "id": "c6", "from": "bundle", "to": "consume", "variant": "dashed" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "配置要点", "items": [
+      "启动期一次性解析+校验",
+      "校验失败拒绝启动",
+      "global_args 运行时只读",
+      "UI bundle 损坏即 fail-fast"
+    ] }
+  ]
+}

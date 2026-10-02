@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": { "title": "管线工具分组架构", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1080, 460] },
+  "components": [
+    { "id": "caller", "type": "external", "label": "pipeline / storage", "pos": [40, 180], "size": [140, 56] },
+    { "id": "field", "type": "backend", "label": "doc-status 字段", "pos": [250, 40], "size": [150, 56] },
+    { "id": "identity", "type": "backend", "label": "文档身份哈希", "pos": [250, 130], "size": [150, 56] },
+    { "id": "path", "type": "backend", "label": "解析产物路径", "pos": [250, 220], "size": [150, 56] },
+    { "id": "payload", "type": "backend", "label": "载荷归一化", "pos": [250, 310], "size": [150, 56] },
+    { "id": "purge", "type": "security", "label": "purge 元数据", "pos": [500, 130], "size": [150, 56] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "utils_pipeline 纯函数（本仓库）", "wraps": ["field", "identity", "path", "payload", "purge"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "caller", "to": "field", "label": "字段读", "variant": "default", "fromSide": "right", "toSide": "left" },
+    { "id": "c2", "from": "caller", "to": "identity", "label": "去重", "variant": "emphasis", "fromSide": "right", "toSide": "left" },
+    { "id": "c3", "from": "caller", "to": "path", "label": "路径", "variant": "default", "fromSide": "right", "toSide": "left" },
+    { "id": "c4", "from": "caller", "to": "payload", "label": "归一化", "variant": "default", "fromSide": "right", "toSide": "left" },
+    { "id": "c5", "from": "identity", "to": "purge", "label": "元数据", "variant": "dashed", "fromSide": "right", "toSide": "left" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "要点", "items": ["纯函数无状态", "容忍后端差异", "安全契约集中点"] }
+  ]
+}

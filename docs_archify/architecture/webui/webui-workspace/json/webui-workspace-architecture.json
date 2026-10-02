@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "工作区架构图",
+    "quality_profile": "standard",
+    "locale": "zh-CN",
+    "viewBox": [
+      1000,
+      560
+    ]
+  },
+  "components": [
+    {
+      "id": "app",
+      "type": "frontend",
+      "label": "WorkspaceApp",
+      "pos": [
+        60,
+        240
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "boot",
+      "type": "backend",
+      "label": "authBootstrap",
+      "pos": [
+        330,
+        100
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "probe",
+      "type": "backend",
+      "label": "credentialProbe",
+      "pos": [
+        330,
+        240
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "snap",
+      "type": "backend",
+      "label": "设置快照",
+      "pos": [
+        330,
+        380
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "query",
+      "type": "frontend",
+      "label": "查询视图",
+      "pos": [
+        620,
+        100
+      ],
+      "size": [
+        150,
+        60
+      ]
+    },
+    {
+      "id": "welcome",
+      "type": "frontend",
+      "label": "欢迎页",
+      "pos": [
+        620,
+        240
+      ],
+      "size": [
+        150,
+        60
+      ]
+    },
+    {
+      "id": "login",
+      "type": "security",
+      "label": "登录页",
+      "pos": [
+        620,
+        380
+      ],
+      "size": [
+        150,
+        60
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "features/workspace",
+      "wraps": [
+        "app",
+        "boot",
+        "probe",
+        "snap",
+        "query",
+        "welcome"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "app",
+      "to": "boot",
+      "variant": "emphasis"
+    },
+    {
+      "id": "c2",
+      "from": "boot",
+      "to": "probe",
+      "variant": "default"
+    },
+    {
+      "id": "c3",
+      "from": "probe",
+      "to": "query",
+      "variant": "default"
+    },
+    {
+      "id": "c4",
+      "from": "probe",
+      "to": "login",
+      "variant": "dashed"
+    },
+    {
+      "id": "c6",
+      "from": "app",
+      "to": "snap",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "工作区要点",
+      "items": [
+        "按认证态分发视图",
+        "凭据探测后才进查询",
+        "进入时冻结设置快照",
+        "失败跳登录页"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": { "title": "文档摄入管线组件架构", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1080, 560] },
+  "components": [
+    { "id": "enq", "type": "backend", "label": "文档入队", "pos": [40, 60], "size": [130, 56], "tag": "enqueue" },
+    { "id": "admit", "type": "security", "label": "准入控制", "pos": [40, 160], "size": [130, 56] },
+    { "id": "ingress", "type": "messagebus", "label": "摄入邮箱", "pos": [250, 110], "size": [130, 56] },
+    { "id": "feeder", "type": "backend", "label": "feeder 喂批", "pos": [450, 110], "size": [130, 56] },
+    { "id": "parse", "type": "backend", "label": "解析 worker", "pos": [650, 40], "size": [130, 56] },
+    { "id": "analyze", "type": "backend", "label": "分析 worker", "pos": [650, 120], "size": [130, 56] },
+    { "id": "proc", "type": "backend", "label": "处理 worker", "pos": [650, 200], "size": [130, 56] },
+    { "id": "docstat", "type": "database", "label": "文档状态库", "pos": [450, 260], "size": [130, 56] },
+    { "id": "extract", "type": "cloud", "label": "提取/合并", "pos": [880, 120], "size": [130, 56] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "_PipelineMixin（本仓库）", "wraps": ["enq", "admit", "ingress", "feeder", "parse", "analyze", "proc", "docstat"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "enq", "to": "admit", "label": "限流", "variant": "default", "fromSide": "bottom", "toSide": "top", "labelDy": 24 },
+    { "id": "c2", "from": "admit", "to": "ingress", "label": "投递", "variant": "default", "fromSide": "right", "toSide": "left" },
+    { "id": "c3", "from": "ingress", "to": "feeder", "label": "喂批", "variant": "emphasis", "fromSide": "right", "toSide": "left" },
+    { "id": "c4", "from": "feeder", "to": "parse", "label": "", "variant": "default", "fromSide": "right", "toSide": "left" },
+    { "id": "c5", "from": "parse", "to": "analyze", "label": "交接", "variant": "default", "fromSide": "bottom", "toSide": "top", "labelDy": 24 },
+    { "id": "c6", "from": "analyze", "to": "proc", "label": "交接", "variant": "default", "fromSide": "bottom", "toSide": "top", "labelDy": 24 },
+    { "id": "c7", "from": "proc", "to": "extract", "label": "KG", "variant": "dashed", "fromSide": "right", "toSide": "left" },
+    { "id": "c8", "from": "proc", "to": "docstat", "label": "状态", "variant": "default", "fromSide": "bottom", "toSide": "top" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "主路径", "items": ["入队→邮箱→feeder→解析→分析→处理", "busy 不阻塞入队", "FAILED 仅手动重试"] }
+  ]
+}

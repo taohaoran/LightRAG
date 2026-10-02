@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "外部解析缓存与下载分支时序",
+    "quality_profile": "showcase",
+    "locale": "zh-CN",
+    "viewBox": [1080, 760]
+  },
+  "participants": [
+    { "id": "pp", "type": "frontend", "label": "摄入管线" },
+    { "id": "tp", "type": "backend", "label": "外部引擎模板" },
+    { "id": "ca", "type": "database", "label": "bundle 缓存" },
+    { "id": "sv", "type": "external", "label": "外部解析服务" },
+    { "id": "sc", "type": "backend", "label": "sidecar" }
+  ],
+  "messages": [
+    { "id": "m1", "from": "pp", "to": "tp", "y": 160, "label": "parse(ParseContext)", "variant": "emphasis" },
+    { "id": "m2", "from": "tp", "to": "ca", "y": 215, "label": "is_bundle_valid", "variant": "default" },
+    { "id": "m3", "from": "ca", "to": "tp", "y": 270, "label": "命中? 命中则跳过", "variant": "return" },
+    { "id": "m4", "from": "tp", "to": "sv", "y": 330, "label": "未命中: download_into", "variant": "emphasis" },
+    { "id": "m5", "from": "sv", "to": "tp", "y": 390, "label": "raw bundle", "variant": "return" },
+    { "id": "m6", "from": "tp", "to": "sc", "y": 455, "label": "build_ir + write_sidecar", "variant": "default" },
+    { "id": "m7", "from": "sc", "to": "tp", "y": 510, "label": "blocks.jsonl", "variant": "return" },
+    { "id": "m8", "from": "tp", "to": "pp", "y": 585, "label": "ParseResult", "variant": "emphasis" }
+  ]
+}

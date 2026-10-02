@@ -1,0 +1,16 @@
+{
+  "schema_version": 1, "diagram_type": "dataflow",
+  "meta": { "title": "词窗切分数据流", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1200, 560] },
+  "stages": [ { "label": "输入" }, { "label": "编码" }, { "label": "切分" }, { "label": "输出" } ],
+  "nodes": [
+    { "id": "txt", "type": "frontend", "label": "文本", "stage": 0, "row": 0 },
+    { "id": "tok", "type": "backend", "label": "tokenizer", "stage": 1, "row": 0 },
+    { "id": "win", "type": "backend", "label": "词窗/递归", "stage": 2, "row": 0 },
+    { "id": "ck", "type": "database", "label": "chunk(含span)", "stage": 3, "row": 0 }
+  ],
+  "flows": [
+    { "from": "txt", "to": "tok", "label": "文本", "variant": "emphasis", "route": "straight" },
+    { "from": "tok", "to": "win", "label": "token", "variant": "emphasis", "route": "straight" },
+    { "from": "win", "to": "ck", "label": "切片", "variant": "emphasis", "route": "straight" }
+  ]
+}

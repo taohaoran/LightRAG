@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "diagram_type": "lifecycle",
+  "meta": { "title": "修复任务生命周期", "quality_profile": "showcase", "locale": "zh-CN" },
+  "states": [
+    { "id": "pending", "type": "initial", "label": "待审计", "phase": 0 },
+    { "id": "auditing", "type": "active", "label": "审计中", "phase": 1 },
+    { "id": "found", "type": "active", "label": "发现问题", "phase": 2 },
+    { "id": "dryrun", "type": "active", "label": "演练计划", "phase": 3 },
+    { "id": "confirmed", "type": "active", "label": "待确认", "phase": 4 },
+    { "id": "fixed", "type": "terminal", "label": "已修复", "phase": 5 },
+    { "id": "clean", "type": "terminal", "label": "无问题", "phase": 5 }
+  ],
+  "transitions": [
+    { "from": "pending", "to": "auditing", "label": "开始" },
+    { "from": "auditing", "to": "clean", "label": "无问题" },
+    { "from": "auditing", "to": "found", "label": "发现问题" },
+    { "from": "found", "to": "dryrun", "label": "生成计划" },
+    { "from": "dryrun", "to": "confirmed", "label": "提交" },
+    { "from": "confirmed", "to": "fixed", "label": "应用" },
+    { "from": "confirmed", "to": "clean", "label": "取消" }
+  ]
+}

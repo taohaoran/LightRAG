@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": { "title": "带缓存补全数据流", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1080, 380] },
+  "stages": [
+    { "label": "角色" },
+    { "label": "provider" },
+    { "label": "缓存" },
+    { "label": "远端" }
+  ],
+  "nodes": [
+    { "id": "role", "type": "external", "label": "角色调用", "stage": 0, "row": 0 },
+    { "id": "prov", "type": "backend", "label": "provider 函数", "stage": 1, "row": 0 },
+    { "id": "cache", "type": "database", "label": "响应缓存", "stage": 2, "row": 0 },
+    { "id": "svc", "type": "cloud", "label": "模型服务", "stage": 3, "row": 0 }
+  ],
+  "flows": [
+    { "from": "role", "to": "prov", "label": "补全", "variant": "emphasis", "route": "straight" },
+    { "from": "prov", "to": "cache", "label": "查缓存", "variant": "default", "route": "straight" },
+    { "from": "cache", "to": "svc", "label": "未命中", "variant": "dashed", "route": "straight" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "补全", "items": ["角色→provider→缓存→远端", "命中即省一次调用"] }
+  ]
+}

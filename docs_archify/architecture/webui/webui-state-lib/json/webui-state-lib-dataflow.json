@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "状态持久化数据流",
+    "quality_profile": "standard",
+    "locale": "zh-CN",
+    "viewBox": [1300, 400]
+  },
+  "stages": [
+    { "label": "交互" },
+    { "label": "store" },
+    { "label": "persist" },
+    { "label": "存储" }
+  ],
+  "nodes": [
+    { "id": "n1", "type": "frontend", "label": "用户操作", "stage": 0, "row": 0 },
+    { "id": "n2", "type": "database", "label": "zustand store", "stage": 1, "row": 0 },
+    { "id": "n3", "type": "backend", "label": "persist 中间件", "stage": 2, "row": 0 },
+    { "id": "n4", "type": "external", "label": "localStorage", "stage": 3, "row": 0 }
+  ],
+  "flows": [
+    { "from": "n1", "to": "n2", "label": "setState", "variant": "emphasis" },
+    { "from": "n2", "to": "n3", "label": "变化", "variant": "default" },
+    { "from": "n3", "to": "n4", "label": "写键", "variant": "dashed" }
+  ]
+}

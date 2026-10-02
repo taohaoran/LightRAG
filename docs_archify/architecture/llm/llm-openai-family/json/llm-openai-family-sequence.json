@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": { "title": "带缓存补全调用时序", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1080, 600] },
+  "participants": [
+    { "id": "caller", "type": "external", "label": "调用方" },
+    { "id": "core", "type": "backend", "label": "补全核心" },
+    { "id": "cache", "type": "database", "label": "LLM 缓存" },
+    { "id": "svc", "type": "cloud", "label": "OpenAI 服务" }
+  ],
+  "messages": [
+    { "id": "m1", "from": "caller", "to": "core", "y": 160, "label": "补全请求", "variant": "emphasis" },
+    { "id": "m2", "from": "core", "to": "cache", "y": 220, "label": "查缓存", "variant": "default" },
+    { "id": "m3", "from": "cache", "to": "core", "y": 280, "label": "命中则返回", "variant": "return" },
+    { "id": "m4", "from": "core", "to": "svc", "y": 345, "label": "chat completions", "variant": "default" },
+    { "id": "m5", "from": "svc", "to": "core", "y": 405, "label": "流式/完整响应", "variant": "return" },
+    { "id": "m6", "from": "core", "to": "cache", "y": 460, "label": "写缓存", "variant": "dashed" },
+    { "id": "m7", "from": "core", "to": "caller", "y": 515, "label": "返回", "variant": "return" }
+  ]
+}

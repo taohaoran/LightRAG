@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "图谱加载时序",
+    "quality_profile": "showcase",
+    "locale": "zh-CN",
+    "viewBox": [1100, 680]
+  },
+  "participants": [
+    { "id": "gv", "type": "frontend", "label": "GraphViewer" },
+    { "id": "hook", "type": "backend", "label": "加载 hook" },
+    { "id": "be", "type": "external", "label": "后端" },
+    { "id": "sigma", "type": "cloud", "label": "sigma" }
+  ],
+  "messages": [
+    { "id": "m1", "from": "gv", "to": "hook", "y": 160, "label": "挂载", "variant": "emphasis" },
+    { "id": "m2", "from": "hook", "to": "be", "y": 220, "label": "queryGraphs", "variant": "default" },
+    { "id": "m3", "from": "be", "to": "hook", "y": 280, "label": "RawGraph", "variant": "return" },
+    { "id": "m4", "from": "hook", "to": "sigma", "y": 340, "label": "建 graphology", "variant": "default" },
+    { "id": "m5", "from": "sigma", "to": "gv", "y": 400, "label": "渲染", "variant": "return" },
+    { "id": "m6", "from": "be", "to": "hook", "y": 500, "label": "失败", "variant": "dashed" },
+    { "id": "m7", "from": "hook", "to": "be", "y": 530, "label": "退避重试", "variant": "dashed" },
+    { "id": "m8", "from": "be", "to": "hook", "y": 590, "label": "成功", "variant": "return" }
+  ]
+}

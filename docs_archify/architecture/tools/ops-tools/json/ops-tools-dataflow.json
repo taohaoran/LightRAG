@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": { "title": "修复工具数据流", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1200, 560] },
+  "stages": [ { "label": "输入" }, { "label": "审计" }, { "label": "演练" }, { "label": "应用" }, { "label": "存储" } ],
+  "nodes": [
+    { "id": "cli", "type": "frontend", "label": "运维 CLI", "stage": 0, "row": 0 },
+    { "id": "aud", "type": "backend", "label": "收集问题", "stage": 1, "row": 0 },
+    { "id": "dr", "type": "backend", "label": "dry-run 计划", "stage": 2, "row": 0 },
+    { "id": "ap", "type": "backend", "label": "应用修复", "stage": 3, "row": 0 },
+    { "id": "st", "type": "database", "label": "四类存储", "stage": 4, "row": 0 }
+  ],
+  "flows": [
+    { "from": "cli", "to": "aud", "label": "目标", "variant": "emphasis", "route": "straight" },
+    { "from": "aud", "to": "dr", "label": "问题", "variant": "default", "route": "straight" },
+    { "from": "dr", "to": "ap", "label": "确认", "variant": "default", "route": "straight" },
+    { "from": "ap", "to": "st", "label": "写回", "variant": "emphasis", "route": "straight" }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "状态库架构图",
+    "quality_profile": "standard",
+    "locale": "zh-CN",
+    "viewBox": [1000, 620]
+  },
+  "components": [
+    { "id": "feat", "type": "frontend", "label": "feature 组件", "pos": [40, 260], "size": [140, 60] },
+    { "id": "settings", "type": "database", "label": "settings store", "pos": [280, 80], "size": [150, 60] },
+    { "id": "graph", "type": "database", "label": "graph store", "pos": [280, 220], "size": [150, 60] },
+    { "id": "qset", "type": "database", "label": "querySettings", "pos": [280, 360], "size": [150, 60] },
+    { "id": "other", "type": "database", "label": "其他 11 store", "pos": [280, 500], "size": [150, 60] },
+    { "id": "lib", "type": "backend", "label": "lib 工具库", "pos": [560, 260], "size": [150, 60] },
+    { "id": "ls", "type": "external", "label": "localStorage", "pos": [820, 260], "size": [140, 60] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "src/stores", "wraps": ["settings", "graph", "qset", "other"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "feat", "to": "settings", "variant": "emphasis" },
+    { "id": "c2", "from": "feat", "to": "graph", "variant": "default" },
+    { "id": "c3", "from": "feat", "to": "qset", "variant": "default" },
+    { "id": "c4", "from": "feat", "to": "lib", "variant": "dashed" },
+    { "id": "c5", "from": "settings", "to": "ls", "variant": "dashed" },
+    { "id": "c6", "from": "qset", "to": "ls", "variant": "dashed" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "状态库要点", "items": [
+      "zustand + persist",
+      "settings/graph 深读",
+      "其余共性归类",
+      "guardedStorage 防崩"
+    ] }
+  ]
+}

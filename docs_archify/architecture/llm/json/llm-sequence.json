@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": { "title": "调用错误分类时序", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1080, 560] },
+  "participants": [
+    { "id": "prov", "type": "backend", "label": "provider" },
+    { "id": "err", "type": "security", "label": "错误判定" },
+    { "id": "svc", "type": "cloud", "label": "模型服务" }
+  ],
+  "messages": [
+    { "id": "m1", "from": "prov", "to": "svc", "y": 160, "label": "发起调用", "variant": "emphasis" },
+    { "id": "m2", "from": "svc", "to": "prov", "y": 220, "label": "抛错误", "variant": "return" },
+    { "id": "m3", "from": "prov", "to": "err", "y": 280, "label": "分类错误", "variant": "default" },
+    { "id": "m4", "from": "err", "to": "prov", "y": 340, "label": "可重试→退避", "variant": "return" },
+    { "id": "m5", "from": "err", "to": "prov", "y": 400, "label": "永久→上抛", "variant": "dashed" }
+  ]
+}

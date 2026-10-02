@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": { "title": "provider 矩阵路由架构", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1080, 460] },
+  "components": [
+    { "id": "roles", "type": "external", "label": "角色注册表", "pos": [40, 180], "size": [130, 56] },
+    { "id": "ollama", "type": "backend", "label": "Ollama", "pos": [250, 40], "size": [120, 52] },
+    { "id": "gemini", "type": "backend", "label": "Gemini", "pos": [250, 110], "size": [120, 52] },
+    { "id": "anth", "type": "backend", "label": "Anthropic", "pos": [250, 180], "size": [120, 52] },
+    { "id": "bedrock", "type": "backend", "label": "Bedrock", "pos": [250, 250], "size": [120, 52] },
+    { "id": "others", "type": "backend", "label": "其余 8 provider", "pos": [250, 320], "size": [120, 52] },
+    { "id": "cache", "type": "database", "label": "LLM 缓存", "pos": [470, 180], "size": [120, 56] },
+    { "id": "svc", "type": "cloud", "label": "远端服务群", "pos": [680, 180], "size": [140, 56] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "llm provider 矩阵（本仓库）", "wraps": ["ollama", "gemini", "anth", "bedrock", "others"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "roles", "to": "ollama", "label": "选函数", "variant": "default", "fromSide": "right", "toSide": "left" },
+    { "id": "c2", "from": "roles", "to": "gemini", "label": "选函数", "variant": "emphasis", "fromSide": "right", "toSide": "left" },
+    { "id": "c3", "from": "gemini", "to": "cache", "label": "缓存", "variant": "dashed", "fromSide": "right", "toSide": "left" },
+    { "id": "c4", "from": "cache", "to": "svc", "label": "HTTP", "variant": "dashed", "fromSide": "right", "toSide": "left" },
+    { "id": "c5", "from": "others", "to": "svc", "label": "", "variant": "dashed", "fromSide": "right", "toSide": "left" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "要点", "items": ["统一 *_complete_if_cache 契约", "字符串路由选 provider", "远端服务不在本仓库"] }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "解析引擎注册表与路由架构",
+    "quality_profile": "showcase",
+    "locale": "zh-CN"
+  },
+  "components": [
+    { "id": "pipeline", "type": "frontend", "label": "摄入管线", "pos": [40, 90], "size": [140, 60], "tag": "上游调用方" },
+    { "id": "routing", "type": "backend", "label": "路由解析", "pos": [250, 90], "size": [150, 60], "tag": "文件名提示+规则" },
+    { "id": "registry", "type": "backend", "label": "引擎注册表", "pos": [250, 230], "size": [150, 70], "tag": "ParserSpec 元数据表" },
+    { "id": "factory", "type": "backend", "label": "惰性工厂", "pos": [250, 360], "size": [150, 60], "tag": "importlib 装载" },
+    { "id": "native", "type": "backend", "label": "native 分发", "pos": [470, 120], "size": [130, 56], "tag": "按后缀派生子引擎" },
+    { "id": "legacy", "type": "backend", "label": "legacy 引擎", "pos": [470, 220], "size": [130, 56], "tag": "本地多格式兜底" },
+    { "id": "mineru", "type": "backend", "label": "MinerU 适配器", "pos": [470, 320], "size": [130, 56], "tag": "外部 HTTP 客户端" },
+    { "id": "docling", "type": "backend", "label": "Docling 适配器", "pos": [470, 420], "size": [130, 56], "tag": "外部 HTTP 客户端" },
+    { "id": "noop", "type": "backend", "label": "reuse/passthrough", "pos": [470, 520], "size": [130, 56], "tag": "内部空格式" },
+    { "id": "minerusvc", "type": "external", "label": "MinerU 服务", "pos": [700, 320], "size": [140, 56], "tag": "不在本仓库源码内" },
+    { "id": "doclingsvc", "type": "external", "label": "Docling 服务", "pos": [700, 420], "size": [140, 56], "tag": "不在本仓库源码内" },
+    { "id": "plugin", "type": "external", "label": "第三方插件", "pos": [40, 360], "size": [140, 60], "tag": "entry point 注册" }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "本仓库解析引擎层", "wraps": ["routing", "registry", "factory", "native", "legacy", "mineru", "docling", "noop"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "pipeline", "to": "routing", "label": "解析引擎", "variant": "emphasis" },
+    { "id": "c2", "from": "routing", "to": "registry", "variant": "default" },
+    { "id": "c3", "from": "registry", "to": "factory", "variant": "default" },
+    { "id": "c4", "from": "factory", "to": "native", "variant": "emphasis" },
+    { "id": "c5", "from": "factory", "to": "legacy", "variant": "default" },
+    { "id": "c6", "from": "factory", "to": "mineru", "variant": "default" },
+    { "id": "c7", "from": "factory", "to": "docling", "variant": "default" },
+    { "id": "c8", "from": "factory", "to": "noop", "variant": "default" },
+    { "id": "c9", "from": "mineru", "to": "minerusvc", "label": "HTTP", "variant": "default" },
+    { "id": "c10", "from": "docling", "to": "doclingsvc", "label": "HTTP", "variant": "default" },
+    { "id": "c11", "from": "plugin", "to": "registry", "label": "register_parser", "variant": "dashed" }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "主路径",
+      "items": [
+        "管线→路由→注册表→惰性工厂→引擎实例",
+        "装注册表零重依赖，实现按解析才 import",
+        "外部服务经端点门禁闭包决定可用性"
+      ]
+    }
+  ]
+}

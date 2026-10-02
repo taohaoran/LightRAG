@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": { "title": "llm 域组件架构", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1080, 440] },
+  "components": [
+    { "id": "roles", "type": "external", "label": "core 角色注册表", "pos": [40, 180], "size": [150, 56] },
+    { "id": "l25", "type": "backend", "label": "OpenAI 家族", "sublabel": "llm-openai-family", "pos": [270, 60], "size": [160, 60] },
+    { "id": "l26", "type": "backend", "label": "provider 矩阵", "sublabel": "11 家同构", "pos": [270, 180], "size": [160, 60] },
+    { "id": "l24", "type": "security", "label": "公共工具", "sublabel": "llm-common", "pos": [270, 300], "size": [160, 60] },
+    { "id": "cache", "type": "database", "label": "LLM 缓存", "pos": [540, 120], "size": [130, 56] },
+    { "id": "svc", "type": "cloud", "label": "外部模型服务群", "pos": [760, 120], "size": [160, 56] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "llm 域（本仓库）", "wraps": ["l25", "l26", "l24"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "roles", "to": "l25", "label": "选函数", "variant": "default", "fromSide": "right", "toSide": "left" },
+    { "id": "c2", "from": "roles", "to": "l26", "label": "选函数", "variant": "emphasis", "fromSide": "right", "toSide": "left" },
+    { "id": "c4", "from": "l25", "to": "cache", "label": "查写", "variant": "dashed", "fromSide": "right", "toSide": "left" },
+    { "id": "c5", "from": "cache", "to": "svc", "label": "调用", "variant": "dashed" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "llm 域", "items": ["统一补全/嵌入契约", "纯适配层", "外部推理不在本仓库"] }
+  ]
+}

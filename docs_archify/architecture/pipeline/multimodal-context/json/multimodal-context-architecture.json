@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": { "title": "多模态上下文模块架构", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1080, 440] },
+  "components": [
+    { "id": "analyze", "type": "external", "label": "分析 worker", "pos": [40, 170], "size": [130, 56] },
+    { "id": "atom", "type": "backend", "label": "文本原子化", "pos": [240, 60], "size": [140, 56] },
+    { "id": "span", "type": "backend", "label": "目标 span 定位", "pos": [240, 160], "size": [140, 56] },
+    { "id": "build", "type": "backend", "label": "首尾上下文装配", "pos": [240, 260], "size": [140, 56] },
+    { "id": "trim", "type": "backend", "label": "表格/内容修剪", "pos": [470, 160], "size": [140, 56] },
+    { "id": "schema", "type": "backend", "label": "sidecar schema 归一", "pos": [470, 260], "size": [140, 56] },
+    { "id": "vlm", "type": "cloud", "label": "外部 VLM", "pos": [720, 160], "size": [130, 56] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "multimodal_context（本仓库）", "wraps": ["atom", "span", "build", "trim", "schema"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "analyze", "to": "span", "label": "块文本", "variant": "emphasis", "fromSide": "right", "toSide": "left" },
+    { "id": "c2", "from": "atom", "to": "span", "label": "原子段", "variant": "default", "fromSide": "bottom", "toSide": "top", "labelDy": 24 },
+    { "id": "c3", "from": "span", "to": "build", "label": "定位", "variant": "default", "fromSide": "bottom", "toSide": "top", "labelDy": 24 },
+    { "id": "c4", "from": "build", "to": "trim", "label": "超预算", "variant": "default", "fromSide": "right", "toSide": "left" },
+    { "id": "c5", "from": "trim", "to": "vlm", "label": "上下文", "variant": "dashed", "fromSide": "right", "toSide": "left" },
+    { "id": "c6", "from": "schema", "to": "build", "label": "heading", "variant": "dashed", "fromSide": "left", "toSide": "right" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "要点", "items": ["围绕多模态元素拼上下文", "按 token 预算修剪表格", "外部 VLM 不在本仓库"] }
+  ]
+}

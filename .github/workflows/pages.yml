@@ -1,0 +1,74 @@
+# GitHub Pages 部署 workflow（GitHub Actions 发布源）
+# 由 github-pages-deploy skill 生成：内容源严格四级优先级选源 + md→html 渲染 + 三级中文导览 + 左上角返回按钮
+name: Deploy LightRAG docs to GitHub Pages
+
+on:
+  push:
+    branches: [feat-docs-20261003]
+    paths:
+      - 'docs/**'
+      - 'docs-archify/**'
+      - 'docs_archify/**'
+      - 'scripts/build-docs-html.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      # ---- 内容源严格四级优先级选源：archify 根下优先/回退子目录 → 部署根下优先/回退子目录 → 均无则回退部署根 ----
+      - name: Build site content (strict 4-level source priority)
+        run: |
+          set -euo pipefail
+          rm -rf site && mkdir -p site
+          SRC=""
+          ARCH_ROOT=""
+          if [ -d "docs_archify" ]; then ARCH_ROOT="docs_archify"
+          elif [ -d "docs-archify" ]; then ARCH_ROOT="docs-archify"
+          fi
+          if [ -n "$ARCH_ROOT" ] && [ -d "$ARCH_ROOT/architecture_improve" ]; then
+            SRC="$ARCH_ROOT/architecture_improve"
+          elif [ -n "$ARCH_ROOT" ] && [ -d "$ARCH_ROOT/architecture" ]; then
+            SRC="$ARCH_ROOT/architecture"
+          elif [ -d "docs/architecture_improve" ]; then
+            SRC="docs/architecture_improve"
+          elif [ -d "docs/architecture" ]; then
+            SRC="docs/architecture"
+          fi
+          if [ -n "$SRC" ]; then
+            echo "==> $SRC found -> deploying its content strictly"
+            cp -R "$SRC/." site/
+          else
+            echo "==> none of the priority subdirs found -> deploying docs root"
+            cp -R docs/. site/
+          fi
+          # ---- md 默认转 html + 强制生成导览 index.md（链接全部 md 与 html）并渲染为 index.html ----
+          pip install --quiet markdown
+          python3 scripts/build-docs-html.py site --site-name "LightRAG 架构文档" --group-label "api=API|chunker=分块|core=核心|llm=LLM|parser=解析器|pipeline=流水线|storage=存储|tools=工具|webui=Web 界面" --label-map "api=API|chunker=分块|core=核心|llm=LLM|parser=解析器|pipeline=流水线|storage=存储|tools=工具|webui=Web 界面|utils-pipeline=流水线工具|pipeline-ingress=流水线入口|pipeline-mixin=Pipeline Mixin|multimodal-context=多模态上下文|ops-tools=运维工具|llm-openai-family=OpenAI 家族|llm-provider-matrix=Provider 矩阵|llm-common=LLM 公共|llm-roles=LLM 角色|operate-retrieval=操作与检索|lightrag-core=LightRAG 核心|parser-engine=解析引擎|external-parsers=外部解析器|docx-parser=DOCX 解析器|sidecar=Sidecar|markdown-parser=Markdown 解析器|storage-contracts=存储契约|document-db-storage=文档数据库存储|graph-operations=图操作|graph-db-storage=图数据库存储|storage-coordination=存储协调|postgres-storage=PostgreSQL 存储|file-backed-stores=文件型存储|api-auth=认证鉴权|api-config=配置加载|api-routers=路由|api-server-core=服务核心|chunker-registry=分块注册表|semantic-chunkers=语义分块|token-recursive-chunkers=Token 递归分块|webui-api-client=API 客户端|webui-document-manager=文档管理|webui-graph-viewer=图谱查看器|webui-login-auth=登录认证|webui-retrieval=检索|webui-state-lib=状态库|webui-workspace=工作区"
+          touch site/.nojekyll
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

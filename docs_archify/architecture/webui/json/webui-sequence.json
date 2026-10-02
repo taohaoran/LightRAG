@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "登录后启动时序",
+    "quality_profile": "showcase",
+    "locale": "zh-CN",
+    "viewBox": [1100, 680]
+  },
+  "participants": [
+    { "id": "user", "type": "frontend", "label": "用户" },
+    { "id": "login", "type": "frontend", "label": "登录页" },
+    { "id": "ws", "type": "frontend", "label": "工作区" },
+    { "id": "be", "type": "external", "label": "后端" }
+  ],
+  "messages": [
+    { "id": "m1", "from": "user", "to": "login", "y": 160, "label": "登录", "variant": "emphasis" },
+    { "id": "m2", "from": "login", "to": "be", "y": 220, "label": "loginToServer", "variant": "default" },
+    { "id": "m3", "from": "be", "to": "login", "y": 280, "label": "token", "variant": "return" },
+    { "id": "m4", "from": "login", "to": "ws", "y": 340, "label": "跳转", "variant": "emphasis" },
+    { "id": "m5", "from": "ws", "to": "be", "y": 400, "label": "auth-status", "variant": "default" },
+    { "id": "m6", "from": "be", "to": "ws", "y": 460, "label": "认证态", "variant": "return" },
+    { "id": "m7", "from": "ws", "to": "user", "y": 520, "label": "渲染查询视图", "variant": "return" }
+  ]
+}

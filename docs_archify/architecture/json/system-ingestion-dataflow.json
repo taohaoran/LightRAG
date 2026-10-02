@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "LightRAG 文档摄入数据流图",
+    "quality_profile": "standard",
+    "locale": "zh-CN",
+    "viewBox": [1200, 700]
+  },
+  "stages": [
+    { "label": "输入" },
+    { "label": "解析" },
+    { "label": "分块与提取" },
+    { "label": "向量化" },
+    { "label": "持久化" }
+  ],
+  "nodes": [
+    { "id": "doc", "type": "frontend", "label": "原始文档", "stage": 0, "row": 0 },
+    { "id": "enqueue", "type": "backend", "label": "摄入邮箱", "stage": 0, "row": 1 },
+    { "id": "parser", "type": "backend", "label": "解析引擎", "sublabel": "native/mineru/docling", "stage": 1, "row": 0 },
+    { "id": "sidecar", "type": "database", "label": "Sidecar产物", "sublabel": "*.parsed/", "stage": 1, "row": 1 },
+    { "id": "chunk", "type": "backend", "label": "分块策略", "stage": 2, "row": 0 },
+    { "id": "extract", "type": "backend", "label": "实体关系提取", "sublabel": "含多模态增强", "stage": 2, "row": 1 },
+    { "id": "embed", "type": "backend", "label": "嵌入计算", "stage": 3, "row": 0 },
+    { "id": "kvstore", "type": "database", "label": "KV存储", "stage": 4, "row": 0 },
+    { "id": "vecstore", "type": "database", "label": "向量存储", "stage": 4, "row": 1 },
+    { "id": "graphstore", "type": "database", "label": "图存储", "stage": 4, "row": 2 },
+    { "id": "statusstore", "type": "database", "label": "文档状态", "stage": 4, "row": 3 }
+  ],
+  "flows": [
+    { "from": "doc", "to": "enqueue", "label": "提交", "variant": "emphasis", "route": "straight", "labelDy": 24 },
+    { "from": "enqueue", "to": "parser", "label": "唤醒处理", "variant": "emphasis", "route": "straight" },
+    { "from": "parser", "to": "sidecar", "label": "写parsed目录", "variant": "default", "route": "straight", "labelDy": 24 },
+    { "from": "sidecar", "to": "chunk", "label": "IR文本", "variant": "emphasis", "route": "vertical-channel" },
+    { "from": "chunk", "to": "extract", "label": "chunks", "variant": "default", "route": "straight", "labelDy": 24 },
+    { "from": "extract", "to": "embed", "label": "实体关系", "variant": "emphasis", "route": "straight" },
+    { "from": "embed", "to": "vecstore", "label": "嵌入向量", "variant": "emphasis", "route": "straight" },
+    { "from": "extract", "to": "kvstore", "label": "chunk", "variant": "default", "route": "straight", "labelDy": -16, "labelSegment": 0 },
+    { "from": "extract", "to": "graphstore", "label": "图谱", "variant": "default", "route": "straight", "labelDy": 16, "labelSegment": 0 },
+    { "from": "enqueue", "to": "statusstore", "label": "状态更新", "variant": "default", "route": "bottom-channel" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "摄入主路径", "items": ["文档→解析→Sidecar→分块→提取→向量化→4类存储"] },
+    { "dot": "cyan", "title": "关键机制", "items": ["ingress mailbox唯一唤醒", "FAILED仅手动重试一次"] }
+  ]
+}

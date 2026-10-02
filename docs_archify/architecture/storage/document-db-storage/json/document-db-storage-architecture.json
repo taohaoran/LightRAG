@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": { "title": "文档与搜索数据库家族", "quality_profile": "showcase", "locale": "zh-CN" },
+  "components": [
+    { "id": "caller", "type": "external", "label": "LightRAG", "pos": [60, 220], "size": [130, 60] },
+    { "id": "mongofam", "type": "backend", "label": "Mongo 四类", "pos": [360, 100], "size": [170, 70], "tag": "即时写" },
+    { "id": "osfam", "type": "backend", "label": "OpenSearch 四类", "pos": [360, 320], "size": [170, 70], "tag": "延迟缓冲" },
+    { "id": "mongodb", "type": "database", "label": "MongoDB 服务", "pos": [700, 110], "size": [160, 60] },
+    { "id": "osserver", "type": "external", "label": "OpenSearch 服务", "pos": [700, 330], "size": [160, 60] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "服务端文档/搜索后端", "wraps": ["mongofam", "osfam"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "caller", "to": "mongofam", "variant": "default" },
+    { "id": "c2", "from": "caller", "to": "osfam", "variant": "emphasis" },
+    { "id": "c3", "from": "mongofam", "to": "mongodb", "variant": "default" },
+    { "id": "c4", "from": "osfam", "to": "osserver", "variant": "default" }
+  ],
+  "cards": [
+    { "dot": "amber", "title": "要点", "items": [
+      "Mongo 即时写、回调空操作",
+      "OpenSearch 延迟缓冲+刷新代际",
+      "行级并发不要求单写者"
+    ] }
+  ]
+}

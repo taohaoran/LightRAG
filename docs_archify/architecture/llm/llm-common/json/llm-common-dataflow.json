@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": { "title": "图像输入归一化数据流", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1080, 400] },
+  "stages": [
+    { "label": "原始输入" },
+    { "label": "解码" },
+    { "label": "归一化" },
+    { "label": "维度探测" }
+  ],
+  "nodes": [
+    { "id": "raw", "type": "frontend", "label": "URL/base64/路径", "stage": 0, "row": 0 },
+    { "id": "dec", "type": "backend", "label": "base64 解码", "stage": 1, "row": 0 },
+    { "id": "norm", "type": "backend", "label": "NormalizedImage", "stage": 2, "row": 0 },
+    { "id": "dim", "type": "backend", "label": "PNG/JPEG/WebP 维度", "stage": 3, "row": 0 }
+  ],
+  "flows": [
+    { "from": "raw", "to": "dec", "label": "字节", "variant": "emphasis", "route": "straight" },
+    { "from": "dec", "to": "norm", "label": "MIME", "variant": "default", "route": "straight" },
+    { "from": "norm", "to": "dim", "label": "图像", "variant": "default", "route": "straight" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "管道", "items": ["多格式输入→解码→归一→维度", "未知格式返回 None"] }
+  ]
+}

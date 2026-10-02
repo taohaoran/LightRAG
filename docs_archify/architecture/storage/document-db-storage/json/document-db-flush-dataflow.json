@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": { "title": "OpenSearch 缓冲与刷新数据流", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1200, 380] },
+  "stages": [
+    { "label": "缓冲" },
+    { "label": "bulk 写入" },
+    { "label": "代际推进" },
+    { "label": "欠刷新判定" },
+    { "label": "refresh 可见" }
+  ],
+  "nodes": [
+    { "id": "buf", "type": "backend", "label": "每进程缓冲", "stage": 0, "row": 0 },
+    { "id": "bulk", "type": "backend", "label": "async_bulk", "stage": 1, "row": 0 },
+    { "id": "gen", "type": "backend", "label": "写代际+1", "stage": 2, "row": 0 },
+    { "id": "due", "type": "backend", "label": "欠刷新?", "stage": 3, "row": 0 },
+    { "id": "vis", "type": "database", "label": "可搜索", "stage": 4, "row": 0 }
+  ],
+  "flows": [
+    { "from": "buf", "to": "bulk", "label": "提交点", "variant": "emphasis", "route": "straight" },
+    { "from": "bulk", "to": "gen", "label": "成功", "variant": "default", "route": "straight" },
+    { "from": "gen", "to": "due", "label": "对比代际", "variant": "default", "route": "straight" },
+    { "from": "due", "to": "vis", "label": "欠则refresh", "variant": "emphasis", "route": "straight" }
+  ],
+  "cards": [
+    { "dot": "violet", "title": "关键", "items": [
+      "空闲命名空间提交是 no-op",
+      "瞬时失败抛引用完整错",
+      "按 id GET 实时不依赖 refresh"
+    ] }
+  ]
+}

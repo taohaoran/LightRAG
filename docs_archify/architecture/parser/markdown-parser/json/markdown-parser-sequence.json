@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "外部图片下载防护时序",
+    "quality_profile": "showcase",
+    "locale": "zh-CN",
+    "viewBox": [
+      1080,
+      760
+    ]
+  },
+  "participants": [
+    {
+      "id": "ad",
+      "type": "backend",
+      "label": "MD 适配器"
+    },
+    {
+      "id": "rs",
+      "type": "backend",
+      "label": "图片解析器"
+    },
+    {
+      "id": "bd",
+      "type": "security",
+      "label": "预算防护"
+    },
+    {
+      "id": "sv",
+      "type": "external",
+      "label": "外部图片服务"
+    }
+  ],
+  "messages": [
+    {
+      "id": "m1",
+      "from": "ad",
+      "to": "rs",
+      "y": 160,
+      "label": "resolve(src)",
+      "variant": "emphasis"
+    },
+    {
+      "id": "m2",
+      "from": "rs",
+      "to": "bd",
+      "y": 215,
+      "label": "charge_bytes/request",
+      "variant": "default"
+    },
+    {
+      "id": "m3",
+      "from": "bd",
+      "to": "rs",
+      "y": 270,
+      "label": "余量? 越界则降级",
+      "variant": "return"
+    },
+    {
+      "id": "m4",
+      "from": "rs",
+      "to": "sv",
+      "y": 330,
+      "label": "守卫连接下载",
+      "variant": "emphasis"
+    },
+    {
+      "id": "m5",
+      "from": "sv",
+      "to": "rs",
+      "y": 390,
+      "label": "图片字节",
+      "variant": "return"
+    },
+    {
+      "id": "m6",
+      "from": "rs",
+      "to": "ad",
+      "y": 470,
+      "label": "ResolvedImage",
+      "variant": "emphasis"
+    }
+  ]
+}

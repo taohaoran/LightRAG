@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": { "title": "摄入邮箱与扫描存储架构", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1080, 480] },
+  "components": [
+    { "id": "enq", "type": "backend", "label": "文档入队", "pos": [40, 80], "size": [130, 56] },
+    { "id": "hub", "type": "backend", "label": "邮箱枢纽", "pos": [250, 80], "size": [130, 56], "tag": "按 workspace" },
+    { "id": "async", "type": "backend", "label": "单进程邮箱", "pos": [470, 40], "size": [130, 56] },
+    { "id": "mgr", "type": "backend", "label": "多进程邮箱", "pos": [470, 130], "size": [130, 56] },
+    { "id": "feeder", "type": "backend", "label": "feeder 消费", "pos": [700, 80], "size": [130, 56] },
+    { "id": "scan", "type": "database", "label": "扫描任务存储", "pos": [250, 240], "size": [140, 56] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "pipeline_ingress（本仓库）", "wraps": ["hub", "async", "mgr", "scan"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "enq", "to": "hub", "label": "投递", "variant": "emphasis", "fromSide": "right", "toSide": "left" },
+    { "id": "c2", "from": "hub", "to": "async", "label": "单进程", "variant": "default", "fromSide": "right", "toSide": "left" },
+    { "id": "c3", "from": "hub", "to": "mgr", "label": "多进程", "variant": "default", "fromSide": "right", "toSide": "left" },
+    { "id": "c4", "from": "async", "to": "feeder", "label": "唤醒", "variant": "default", "fromSide": "right", "toSide": "left" },
+    { "id": "c5", "from": "mgr", "to": "feeder", "label": "唤醒", "variant": "default", "fromSide": "right", "toSide": "left" },
+    { "id": "c6", "from": "enq", "to": "scan", "label": "扫描", "variant": "dashed", "fromSide": "bottom", "toSide": "top" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "要点", "items": ["邮箱是唯一唤醒通道", "doc_status 才是真相", "漏通知由 strict scan 兜底"] }
+  ]
+}

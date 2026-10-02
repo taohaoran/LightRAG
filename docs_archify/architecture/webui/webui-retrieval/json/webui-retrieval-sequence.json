@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "流式查询时序",
+    "quality_profile": "showcase",
+    "locale": "zh-CN",
+    "viewBox": [1100, 720]
+  },
+  "participants": [
+    { "id": "user", "type": "frontend", "label": "用户" },
+    { "id": "composer", "type": "frontend", "label": "QueryComposer" },
+    { "id": "hook", "type": "backend", "label": "会话 hook" },
+    { "id": "be", "type": "external", "label": "后端" }
+  ],
+  "messages": [
+    { "id": "m1", "from": "user", "to": "composer", "y": 160, "label": "输入并发送", "variant": "emphasis" },
+    { "id": "m2", "from": "composer", "to": "hook", "y": 220, "label": "submitQuery", "variant": "emphasis" },
+    { "id": "m3", "from": "hook", "to": "be", "y": 280, "label": "queryTextStream", "variant": "default" },
+    { "id": "m4", "from": "be", "to": "hook", "y": 340, "label": "SSE chunk", "variant": "return" },
+    { "id": "m5", "from": "hook", "to": "composer", "y": 400, "label": "更新消息", "variant": "dashed" },
+    { "id": "m6", "from": "user", "to": "composer", "y": 500, "label": "点停止", "variant": "default" },
+    { "id": "m7", "from": "composer", "to": "hook", "y": 560, "label": "handleStop", "variant": "default" },
+    { "id": "m8", "from": "hook", "to": "be", "y": 620, "label": "abort", "variant": "dashed" }
+  ]
+}

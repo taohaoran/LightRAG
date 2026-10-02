@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "API 路由层架构图",
+    "quality_profile": "standard",
+    "locale": "zh-CN",
+    "viewBox": [1000, 900]
+  },
+  "components": [
+    { "id": "client", "type": "external", "label": "客户端", "pos": [60, 60], "size": [120, 56] },
+    { "id": "auth", "type": "security", "label": "认证依赖", "pos": [60, 200], "size": [120, 56] },
+    { "id": "doc", "type": "backend", "label": "文档路由", "pos": [280, 60], "size": [180, 70], "tag": "17 端点" },
+    { "id": "graph", "type": "backend", "label": "图谱路由", "pos": [280, 190], "size": [180, 60], "tag": "12 端点" },
+    { "id": "query", "type": "backend", "label": "查询路由", "pos": [280, 310], "size": [180, 60], "tag": "3 端点" },
+    { "id": "ollama", "type": "backend", "label": "Ollama 兼容", "pos": [280, 430], "size": [180, 60] },
+    { "id": "ui", "type": "backend", "label": "UI 定制路由", "pos": [280, 550], "size": [180, 60] },
+    { "id": "rag", "type": "backend", "label": "LightRAG 核心", "pos": [620, 250], "size": [180, 80] },
+    { "id": "pipeline", "type": "backend", "label": "摄入管线", "pos": [620, 430], "size": [180, 60] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "路由工厂层", "wraps": ["doc", "graph", "query", "ollama", "ui"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "client", "to": "auth", "variant": "emphasis" },
+    { "id": "c2", "from": "auth", "to": "doc", "variant": "default" },
+    { "id": "c3", "from": "auth", "to": "graph", "variant": "default" },
+    { "id": "c4", "from": "auth", "to": "query", "variant": "default" },
+    { "id": "c5", "from": "doc", "to": "pipeline", "variant": "default" },
+    { "id": "c6", "from": "graph", "to": "rag", "variant": "default" },
+    { "id": "c7", "from": "query", "to": "rag", "variant": "emphasis" },
+    { "id": "c8", "from": "ollama", "to": "rag", "variant": "default" },
+    { "id": "c9", "from": "pipeline", "to": "rag", "variant": "dashed" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "路由分组", "items": [
+      "五路由均为工厂函数注入 rag",
+      "图谱写前做 pipeline 忙预检",
+      "Ollama 协议适配外部客户端",
+      "认证依赖见 api-auth 叶子"
+    ] }
+  ]
+}

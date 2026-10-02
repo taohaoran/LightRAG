@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": { "title": "core 域组件架构", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1080, 460] },
+  "components": [
+    { "id": "main", "type": "external", "label": "API / 脚本", "pos": [40, 190], "size": [120, 56] },
+    { "id": "l01", "type": "backend", "label": "主类编排", "sublabel": "lightrag-core", "pos": [230, 60], "size": [150, 60] },
+    { "id": "l02", "type": "backend", "label": "检索与提取", "sublabel": "operate-retrieval", "pos": [230, 180], "size": [150, 60] },
+    { "id": "l03", "type": "backend", "label": "LLM 角色", "sublabel": "llm-roles", "pos": [230, 300], "size": [150, 60] },
+    { "id": "llm", "type": "cloud", "label": "llm 域", "pos": [520, 300], "size": [130, 56] },
+    { "id": "store", "type": "database", "label": "storage 域", "pos": [520, 180], "size": [130, 56] },
+    { "id": "pipe", "type": "backend", "label": "pipeline 域", "pos": [520, 60], "size": [130, 56] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "core 域（本仓库）", "wraps": ["l01", "l02", "l03"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "main", "to": "l01", "label": "ainsert/aquery", "variant": "emphasis", "fromSide": "right", "toSide": "left" },
+    { "id": "c2", "from": "l01", "to": "l02", "label": "检索", "variant": "default", "fromSide": "bottom", "toSide": "top", "labelDy": 24 },
+    { "id": "c4", "from": "l02", "to": "store", "label": "读写", "variant": "dashed", "fromSide": "right", "toSide": "left" },
+    { "id": "c5", "from": "l03", "to": "llm", "label": "函数", "variant": "dashed", "fromSide": "right", "toSide": "left" },
+    { "id": "c6", "from": "l01", "to": "pipe", "label": "委托", "variant": "dashed", "fromSide": "right", "toSide": "left" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "core 域", "items": ["主类粘合存储与管线", "检索提取驱动", "角色路由到 llm 域"] }
+  ]
+}

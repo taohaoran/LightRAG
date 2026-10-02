@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": { "title": "文档处理数据流", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1080, 520] },
+  "stages": [
+    { "label": "入队" },
+    { "label": "解析" },
+    { "label": "多模态分析" },
+    { "label": "分块提取" },
+    { "label": "落库" }
+  ],
+  "nodes": [
+    { "id": "enq", "type": "backend", "label": "入队去重", "sublabel": "doc_status", "stage": 0, "row": 0 },
+    { "id": "parse", "type": "backend", "label": "解析引擎", "sublabel": "native/mineru/docling", "stage": 1, "row": 0 },
+    { "id": "vlm", "type": "cloud", "label": "VLM 分析", "sublabel": "图片音视频", "stage": 2, "row": 0 },
+    { "id": "chunk", "type": "backend", "label": "分块", "sublabel": "F/R/V/P", "stage": 3, "row": 0 },
+    { "id": "extract", "type": "cloud", "label": "实体提取", "sublabel": "gleaning", "stage": 3, "row": 1 },
+    { "id": "graph", "type": "database", "label": "图存储", "stage": 4, "row": 0 },
+    { "id": "vdb", "type": "database", "label": "向量库", "stage": 4, "row": 1 }
+  ],
+  "flows": [
+    { "from": "enq", "to": "parse", "label": "待处理文档", "variant": "emphasis", "route": "straight" },
+    { "from": "parse", "to": "vlm", "label": "解析产物", "variant": "default", "route": "straight" },
+    { "from": "vlm", "to": "chunk", "label": "文本+实体", "variant": "default", "route": "straight" },
+    { "from": "chunk", "to": "extract", "label": "块", "variant": "default", "route": "straight", "labelDy": 30 },
+    { "from": "extract", "to": "graph", "label": "节点边", "variant": "default", "route": "straight", "labelDy": -20 },
+    { "from": "extract", "to": "vdb", "label": "嵌入", "variant": "default", "route": "straight", "labelDy": 20 }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "管道", "items": ["文档入队到图与向量库", "外部解析/VLM 服务不在本仓库", "跨存储无事务"] }
+  ]
+}

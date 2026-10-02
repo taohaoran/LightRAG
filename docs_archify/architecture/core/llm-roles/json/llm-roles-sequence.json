@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": { "title": "角色 LLM 包装器重建时序", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1080, 700] },
+  "participants": [
+    { "id": "mixin", "type": "backend", "label": "角色 mixin" },
+    { "id": "state", "type": "database", "label": "角色状态" },
+    { "id": "wrap", "type": "backend", "label": "队列包装器" },
+    { "id": "clean", "type": "security", "label": "退役清理" },
+    { "id": "caller", "type": "external", "label": "调用方" }
+  ],
+  "messages": [
+    { "id": "m1", "from": "mixin", "to": "state", "y": 160, "label": "读角色配置", "variant": "default" },
+    { "id": "m2", "from": "state", "to": "mixin", "y": 220, "label": "kwargs/超时/并发", "variant": "return" },
+    { "id": "m3", "from": "mixin", "to": "wrap", "y": 290, "label": "套优先级队列", "variant": "emphasis" },
+    { "id": "m4", "from": "wrap", "to": "mixin", "y": 350, "label": "新包装器", "variant": "return" },
+    { "id": "m5", "from": "mixin", "to": "clean", "y": 420, "label": "旧队列后台排空", "variant": "dashed" },
+    { "id": "m6", "from": "clean", "to": "mixin", "y": 490, "label": "在飞请求完成", "variant": "return" },
+    { "id": "m7", "from": "mixin", "to": "caller", "y": 560, "label": "更新 role_llm_funcs", "variant": "emphasis" }
+  ]
+}

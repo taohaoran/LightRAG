@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": { "title": "摄入管线数据流", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1080, 400] },
+  "stages": [
+    { "label": "入队" },
+    { "label": "解析" },
+    { "label": "分块" },
+    { "label": "提取写存储" }
+  ],
+  "nodes": [
+    { "id": "doc", "type": "external", "label": "原始文档", "stage": 0, "row": 0 },
+    { "id": "parse", "type": "backend", "label": "解析分发", "sublabel": "native/mineru/docling", "stage": 1, "row": 0 },
+    { "id": "chunk", "type": "backend", "label": "分块", "stage": 2, "row": 0 },
+    { "id": "store", "type": "database", "label": "图+KV+向量", "stage": 3, "row": 0 }
+  ],
+  "flows": [
+    { "from": "doc", "to": "parse", "label": "文档", "variant": "emphasis", "route": "straight" },
+    { "from": "parse", "to": "chunk", "label": "文本", "variant": "default", "route": "straight" },
+    { "from": "chunk", "to": "store", "label": "实体/关系", "variant": "default", "route": "straight" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "摄入", "items": ["文档→解析→分块→提取写存储", "跨存储无事务"] }
+  ]
+}

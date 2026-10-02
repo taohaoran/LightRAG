@@ -1,0 +1,23 @@
+{
+  "schema_version": 2, "diagram_type": "workflow",
+  "meta": { "title": "修复工具演练到应用流程", "quality_profile": "showcase", "locale": "zh-CN" },
+  "nodes": [
+    { "id": "s", "type": "start", "label": "开始" },
+    { "id": "a1", "type": "action", "label": "收集/审计" },
+    { "id": "d1", "type": "decision", "label": "有问题?" },
+    { "id": "a2", "type": "action", "label": "生成 dry-run 计划" },
+    { "id": "d2", "type": "decision", "label": "用户确认?" },
+    { "id": "a3", "type": "action", "label": "应用修复" },
+    { "id": "e", "type": "end", "label": "完成" }
+  ],
+  "edges": [
+    { "from": "s", "to": "a1" },
+    { "from": "a1", "to": "d1" },
+    { "from": "d1", "to": "a2", "label": "是" },
+    { "from": "d1", "to": "e", "label": "否" },
+    { "from": "a2", "to": "d2" },
+    { "from": "d2", "to": "a3", "label": "是" },
+    { "from": "d2", "to": "e", "label": "否" },
+    { "from": "a3", "to": "e" }
+  ]
+}

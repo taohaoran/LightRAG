@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "API 服务端核心架构图",
+    "quality_profile": "standard",
+    "locale": "zh-CN",
+    "viewBox": [1000, 1000]
+  },
+  "components": [
+    { "id": "uvicorn", "type": "backend", "label": "Uvicorn", "pos": [280, 40], "size": [200, 56] },
+    { "id": "gunicorn", "type": "backend", "label": "Gunicorn", "pos": [600, 40], "size": [160, 56] },
+    { "id": "mw", "type": "security", "label": "中间件链", "pos": [280, 200], "size": [200, 70] },
+    { "id": "app", "type": "backend", "label": "FastAPI 实例", "pos": [280, 360], "size": [200, 60] },
+    { "id": "lifespan", "type": "backend", "label": "Lifespan", "pos": [600, 360], "size": [160, 60] },
+    { "id": "routers", "type": "backend", "label": "路由模块", "pos": [280, 520], "size": [200, 60] },
+    { "id": "static", "type": "frontend", "label": "WebUI 静态", "pos": [600, 520], "size": [160, 60] },
+    { "id": "rag", "type": "backend", "label": "LightRAG", "pos": [280, 680], "size": [200, 60] },
+    { "id": "llm", "type": "cloud", "label": "远端LLM", "pos": [600, 680], "size": [160, 60] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "FastAPI 应用进程", "wraps": ["mw", "app", "lifespan", "routers", "static"] }
+  ],
+  "connections": [
+    { "id": "c3", "from": "uvicorn", "to": "mw", "variant": "emphasis" },
+    { "id": "c4", "from": "gunicorn", "to": "mw", "variant": "default" },
+    { "id": "c5", "from": "mw", "to": "app", "variant": "emphasis" },
+    { "id": "c6", "from": "app", "to": "lifespan", "variant": "dashed" },
+    { "id": "c7", "from": "app", "to": "routers", "variant": "default" },
+    { "id": "c8", "from": "app", "to": "static", "variant": "default" },
+    { "id": "c10", "from": "routers", "to": "rag", "variant": "emphasis" },
+    { "id": "c11", "from": "rag", "to": "llm", "variant": "dashed" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "装配要点", "items": [
+      "create_app 集中 fail-fast 启动校验",
+      "中间件后加居外，CORS 最外层",
+      "preload_app 主进程构建后 fork",
+      "外部 LLM 服务不在本仓库源码内"
+    ] }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "API 客户端架构图",
+    "quality_profile": "standard",
+    "locale": "zh-CN",
+    "viewBox": [1100, 620]
+  },
+  "components": [
+    { "id": "comp", "type": "frontend", "label": "组件/Store", "pos": [40, 260], "size": [140, 60] },
+    { "id": "funcs", "type": "frontend", "label": "REST 函数组", "pos": [250, 260], "size": [150, 60] },
+    { "id": "reqint", "type": "backend", "label": "请求拦截器", "pos": [250, 120], "size": [150, 60] },
+    { "id": "resint", "type": "backend", "label": "响应拦截器", "pos": [250, 400], "size": [150, 60] },
+    { "id": "axios", "type": "backend", "label": "axios 实例", "pos": [470, 260], "size": [140, 60] },
+    { "id": "token", "type": "security", "label": "token 刷新", "pos": [470, 120], "size": [140, 60] },
+    { "id": "be", "type": "external", "label": "后端 REST", "pos": [700, 260], "size": [150, 60] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "lightrag.ts", "wraps": ["funcs", "reqint", "resint", "axios", "token"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "comp", "to": "funcs", "variant": "emphasis" },
+    { "id": "c2", "from": "funcs", "to": "reqint", "variant": "default" },
+    { "id": "c3", "from": "funcs", "to": "axios", "variant": "emphasis" },
+    { "id": "c4", "from": "axios", "to": "be", "variant": "emphasis" },
+    { "id": "c5", "from": "be", "to": "resint", "variant": "dashed" },
+    { "id": "c6", "from": "resint", "to": "token", "variant": "dashed" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "客户端要点", "items": [
+      "单例 axios 实例",
+      "请求自动附 token",
+      "x-new-token 自动续期",
+      "401 guest 刷新去重"
+    ] }
+  ]
+}

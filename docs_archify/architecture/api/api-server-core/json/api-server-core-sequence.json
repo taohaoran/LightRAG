@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "请求穿过中间件栈时序",
+    "quality_profile": "showcase",
+    "locale": "zh-CN",
+    "viewBox": [1200, 820]
+  },
+  "participants": [
+    { "id": "client", "type": "external", "label": "客户端" },
+    { "id": "cors", "type": "security", "label": "CORS 中间件" },
+    { "id": "body", "type": "security", "label": "BodyLimit" },
+    { "id": "adm", "type": "security", "label": "Admission" },
+    { "id": "route", "type": "backend", "label": "路由+认证" },
+    { "id": "rag", "type": "backend", "label": "LightRAG" }
+  ],
+  "messages": [
+    { "id": "m1", "from": "client", "to": "cors", "y": 160, "label": "HTTP 请求", "variant": "emphasis" },
+    { "id": "m2", "from": "cors", "to": "body", "y": 220, "label": "透传并加 CORS 头", "variant": "default" },
+    { "id": "m3", "from": "body", "to": "adm", "y": 280, "label": "逐块计数未超限", "variant": "default" },
+    { "id": "m4", "from": "adm", "to": "route", "y": 340, "label": "容量充足透传", "variant": "default" },
+    { "id": "m5", "from": "route", "to": "rag", "y": 400, "label": "ainsert / aquery", "variant": "emphasis" },
+    { "id": "m6", "from": "rag", "to": "route", "y": 460, "label": "结果 / 流式块", "variant": "return" },
+    { "id": "m7", "from": "route", "to": "client", "y": 520, "label": "JSON / SSE 响应", "variant": "return" },
+    { "id": "m8", "from": "body", "to": "client", "y": 600, "label": "body 超限直接 413", "variant": "return" },
+    { "id": "m9", "from": "adm", "to": "client", "y": 660, "label": "容量满直接 423", "variant": "return" },
+    { "id": "m10", "from": "route", "to": "client", "y": 720, "label": "凭据失败 401", "variant": "return" }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "解析分发调用时序",
+    "quality_profile": "showcase",
+    "locale": "zh-CN",
+    "viewBox": [1080, 760]
+  },
+  "participants": [
+    { "id": "pp", "type": "frontend", "label": "摄入管线" },
+    { "id": "rt", "type": "backend", "label": "路由" },
+    { "id": "rg", "type": "backend", "label": "注册表" },
+    { "id": "en", "type": "backend", "label": "解析引擎" },
+    { "id": "sc", "type": "database", "label": "sidecar 写入" }
+  ],
+  "messages": [
+    { "id": "m1", "from": "pp", "to": "rt", "y": 160, "label": "parse(doc)", "variant": "emphasis" },
+    { "id": "m2", "from": "rt", "to": "rg", "y": 215, "label": "get_engine()", "variant": "default" },
+    { "id": "m3", "from": "rg", "to": "rt", "y": 270, "label": "引擎类", "variant": "return" },
+    { "id": "m4", "from": "rt", "to": "en", "y": 330, "label": "parse(ctx)", "variant": "emphasis" },
+    { "id": "m5", "from": "en", "to": "rt", "y": 400, "label": "IRDoc", "variant": "return" },
+    { "id": "m6", "from": "rt", "to": "sc", "y": 460, "label": "write_sidecar(IRDoc)", "variant": "emphasis" },
+    { "id": "m7", "from": "sc", "to": "pp", "y": 530, "label": "*.parsed 路径", "variant": "return" }
+  ]
+}

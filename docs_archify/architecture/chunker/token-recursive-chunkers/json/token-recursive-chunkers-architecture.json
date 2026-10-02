@@ -1,0 +1,20 @@
+{
+  "schema_version": 1, "diagram_type": "architecture",
+  "meta": { "title": "F/R 分块架构", "quality_profile": "showcase", "locale": "zh-CN" },
+  "components": [
+    { "id": "ct", "type": "frontend", "label": "输入文本", "pos": [40, 190], "size": [120, 56] },
+    { "id": "f", "type": "backend", "label": "F 固定词窗", "pos": [250, 90], "size": [130, 56] },
+    { "id": "r", "type": "backend", "label": "R 递归字符", "pos": [250, 290], "size": [130, 56] },
+    { "id": "sp", "type": "external", "label": "LangChain Splitter", "pos": [470, 290], "size": [150, 56], "tag": "不在本仓库" },
+    { "id": "ck", "type": "database", "label": "chunk 列表", "pos": [690, 190], "size": [130, 56] }
+  ],
+  "boundaries": [ { "kind": "region", "label": "token-recursive", "wraps": ["f", "r"] } ],
+  "connections": [
+    { "id": "c1", "from": "ct", "to": "f", "variant": "emphasis" },
+    { "id": "c2", "from": "ct", "to": "r", "variant": "default" },
+    { "id": "c3", "from": "r", "to": "sp", "variant": "dashed" },
+    { "id": "c4", "from": "f", "to": "ck", "variant": "emphasis" },
+    { "id": "c5", "from": "r", "to": "ck", "variant": "default" }
+  ],
+  "cards": [ { "dot": "emerald", "title": "主路径", "items": ["文本→词窗/递归切→chunk", "R 委托 LangChain Splitter", "chunk 带原文 span"] } ]
+}

@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "请求与 token 刷新时序",
+    "quality_profile": "showcase",
+    "locale": "zh-CN",
+    "viewBox": [1100, 760]
+  },
+  "participants": [
+    { "id": "ui", "type": "frontend", "label": "组件" },
+    { "id": "ax", "type": "backend", "label": "axios" },
+    { "id": "be", "type": "external", "label": "后端" },
+    { "id": "store", "type": "backend", "label": "auth store" }
+  ],
+  "messages": [
+    { "id": "m1", "from": "ui", "to": "ax", "y": 160, "label": "queryTextStream", "variant": "emphasis" },
+    { "id": "m2", "from": "ax", "to": "be", "y": 220, "label": "带 token 请求", "variant": "default" },
+    { "id": "m3", "from": "be", "to": "ax", "y": 280, "label": "SSE/JSON 响应", "variant": "return" },
+    { "id": "m4", "from": "ax", "to": "store", "y": 340, "label": "x-new-token 续期", "variant": "dashed" },
+    { "id": "m5", "from": "ax", "to": "ui", "y": 400, "label": "结果", "variant": "return" },
+    { "id": "m6", "from": "be", "to": "ax", "y": 500, "label": "401", "variant": "return" },
+    { "id": "m7", "from": "ax", "to": "be", "y": 560, "label": "/auth-status 刷新", "variant": "default" },
+    { "id": "m8", "from": "be", "to": "ax", "y": 620, "label": "新 token", "variant": "return" },
+    { "id": "m9", "from": "ax", "to": "ui", "y": 660, "label": "认证失败", "variant": "return" }
+  ]
+}

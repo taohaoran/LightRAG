@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": { "title": "文件型五存储家族与两通道围栏", "quality_profile": "showcase", "locale": "zh-CN" },
+  "components": [
+    { "id": "nx", "type": "database", "label": "NetworkX 图", "pos": [60, 80], "size": [150, 60], "tag": "唯一单写者" },
+    { "id": "nano", "type": "database", "label": "Nano 向量", "pos": [60, 190], "size": [150, 60] },
+    { "id": "faiss", "type": "database", "label": "Faiss 向量", "pos": [60, 300], "size": [150, 60] },
+    { "id": "jsonkv", "type": "backend", "label": "JsonKV", "pos": [60, 440], "size": [150, 60], "tag": "共享 dict" },
+    { "id": "jsondoc", "type": "backend", "label": "JsonDocStatus", "pos": [60, 550], "size": [150, 60] },
+    { "id": "fp", "type": "external", "label": "文件指纹通道", "pos": [400, 130], "size": [170, 60], "tag": "权威 状态" },
+    { "id": "flag", "type": "backend", "label": "storage_updated", "pos": [400, 300], "size": [170, 60], "tag": "加速 事件" },
+    { "id": "noop", "type": "backend", "label": "Noop 向量", "pos": [400, 470], "size": [170, 60], "tag": "空实现" }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "重载型：单副本+两通道围栏", "wraps": ["nx", "nano", "faiss"] },
+    { "kind": "region", "label": "共享 dict 型：标志语义相反", "wraps": ["jsonkv", "jsondoc"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "nx", "to": "fp", "variant": "default" },
+    { "id": "c2", "from": "nano", "to": "fp", "variant": "default" },
+    { "id": "c3", "from": "faiss", "to": "fp", "variant": "default" },
+    { "id": "c4", "from": "nx", "to": "flag", "variant": "emphasis" },
+    { "id": "c5", "from": "nano", "to": "flag", "variant": "default" },
+    { "id": "c6", "from": "faiss", "to": "flag", "variant": "default" },
+    { "id": "c7", "from": "jsonkv", "to": "flag", "label": "True=脏待刷", "variant": "dashed" },
+    { "id": "c8", "from": "jsondoc", "to": "flag", "variant": "dashed" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "关键分叉", "items": [
+      "图store写冲突拒绝提交",
+      "向量store重载并重放",
+      "JsonKV/DocStatus无重载路径"
+    ] }
+  ]
+}

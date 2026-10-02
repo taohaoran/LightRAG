@@ -1,0 +1,15 @@
+{
+  "schema_version": 1, "diagram_type": "sequence",
+  "meta": { "title": "双契约调用时序", "quality_profile": "showcase", "locale": "zh-CN", "viewBox": [1080, 700] },
+  "participants": [
+    { "id": "pp", "type": "frontend", "label": "pipeline" },
+    { "id": "rt", "type": "backend", "label": "注册表" },
+    { "id": "st", "type": "backend", "label": "分块策略" }
+  ],
+  "messages": [
+    { "id": "m1", "from": "pp", "to": "rt", "y": 160, "label": "select(F/R/V/P)", "variant": "emphasis" },
+    { "id": "m2", "from": "rt", "to": "st", "y": 230, "label": "invoke(context)", "variant": "emphasis" },
+    { "id": "m3", "from": "st", "to": "rt", "y": 310, "label": "chunk+span", "variant": "return" },
+    { "id": "m4", "from": "rt", "to": "pp", "y": 390, "label": "chunk 列表", "variant": "return" }
+  ]
+}
